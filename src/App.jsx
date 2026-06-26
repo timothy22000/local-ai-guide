@@ -16,26 +16,26 @@ const Section = ({ id, children, className = "" }) => (
 
 const SectionTitle = ({ eyebrow, title, subtitle }) => (
   <div className="mb-12">
-    {eyebrow && <p className="text-emerald-400 text-sm font-mono uppercase tracking-widest mb-2">{eyebrow}</p>}
-    <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{title}</h2>
-    {subtitle && <p className="text-slate-400 text-lg max-w-2xl">{subtitle}</p>}
+    {eyebrow && <p className="text-accent text-xs font-sans font-semibold uppercase tracking-[0.18em] mb-3">{eyebrow}</p>}
+    <h2 className="text-3xl md:text-4xl font-bold font-display text-ink mb-4">{title}</h2>
+    {subtitle && <p className="text-body text-xl max-w-2xl font-serif leading-relaxed">{subtitle}</p>}
   </div>
 );
 
 const Card = ({ children, className = "", highlight = false }) => (
-  <div className={`rounded-xl p-6 ${highlight ? 'bg-gradient-to-br from-emerald-900/40 to-cyan-900/40 border border-emerald-500/30' : 'bg-slate-800/50 border border-slate-700/50'} ${className}`}>
+  <div className={`rounded-xl p-6 ${highlight ? 'bg-accentsoft border border-accent/30' : 'bg-white border border-rule'} ${className}`}>
     {children}
   </div>
 );
 
 const Badge = ({ children, variant = "default" }) => {
   const v = {
-    default: "bg-slate-700 text-slate-300",
-    success: "bg-emerald-900/50 text-emerald-400 border border-emerald-500/30",
-    warning: "bg-amber-900/50 text-amber-400 border border-amber-500/30",
-    danger: "bg-red-900/50 text-red-400 border border-red-500/30",
-    info: "bg-cyan-900/50 text-cyan-400 border border-cyan-500/30",
-    purple: "bg-purple-900/50 text-purple-400 border border-purple-500/30",
+    default: "bg-track text-body",
+    success: "bg-accentsoft text-accent border border-accent/30",
+    warning: "bg-goldsoft text-gold border border-gold/30",
+    danger: "bg-accentsoft text-accent border border-accent/30",
+    info: "bg-navysoft text-navy border border-navy/30",
+    purple: "bg-navysoft text-navy border border-navy/30",
   };
   return <span className={`px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap ${v[variant]}`}>{children}</span>;
 };
@@ -44,17 +44,17 @@ const DataTable = ({ headers, rows, compact = false }) => (
   <div className="overflow-x-auto -mx-2">
     <table className="w-full text-left">
       <thead>
-        <tr className="border-b border-slate-700">
+        <tr className="border-b border-rule">
           {headers.map((h, i) => (
-            <th key={i} className={`${compact ? 'py-2 px-3 text-xs' : 'py-3 px-4 text-sm'} font-semibold text-slate-300 whitespace-nowrap`}>{h}</th>
+            <th key={i} className={`${compact ? 'py-2 px-3 text-xs' : 'py-3 px-4 text-sm'} font-semibold text-body whitespace-nowrap`}>{h}</th>
           ))}
         </tr>
       </thead>
       <tbody>
         {rows.map((row, i) => (
-          <tr key={i} className="border-b border-slate-800 hover:bg-slate-800/50 transition-colors">
+          <tr key={i} className="border-b border-rule hover:bg-white transition-colors">
             {row.map((cell, j) => (
-              <td key={j} className={`${compact ? 'py-2 px-3 text-xs' : 'py-3 px-4 text-sm'} text-slate-400 whitespace-nowrap`}>{cell}</td>
+              <td key={j} className={`${compact ? 'py-2 px-3 text-xs' : 'py-3 px-4 text-sm'} text-muted whitespace-nowrap`}>{cell}</td>
             ))}
           </tr>
         ))}
@@ -64,21 +64,21 @@ const DataTable = ({ headers, rows, compact = false }) => (
 );
 
 const CodeBlock = ({ children, title }) => (
-  <div className="rounded-lg overflow-hidden bg-slate-900 border border-slate-700">
-    {title && <div className="px-4 py-2 bg-slate-800 border-b border-slate-700 text-xs font-mono text-slate-400">{title}</div>}
-    <pre className="p-4 text-sm font-mono text-emerald-400 overflow-x-auto leading-relaxed">{children}</pre>
+  <div className="rounded-lg overflow-hidden bg-codebg border border-rule">
+    {title && <div className="px-4 py-2 bg-codebar border-b border-rule text-xs font-mono text-faint">{title}</div>}
+    <pre className="p-4 text-sm font-mono text-codeink overflow-x-auto leading-relaxed">{children}</pre>
   </div>
 );
 
 const ProgressBar = ({ value, max = 100, label, color = "emerald" }) => {
-  const colors = { emerald: "bg-emerald-500", cyan: "bg-cyan-500", amber: "bg-amber-500", red: "bg-red-500", purple: "bg-purple-500" };
+  const colors = { emerald: "bg-accent", cyan: "bg-navy", amber: "bg-gold", red: "bg-accent", purple: "bg-navy" };
   return (
     <div className="space-y-1">
       <div className="flex justify-between text-xs">
-        <span className="text-slate-400">{label}</span>
-        <span className="text-slate-300 font-medium">{value}%</span>
+        <span className="text-muted">{label}</span>
+        <span className="text-body font-medium">{value}%</span>
       </div>
-      <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
+      <div className="h-2 bg-track rounded-full overflow-hidden">
         <div className={`h-full ${colors[color]} rounded-full transition-all duration-700`} style={{ width: `${(value / max) * 100}%` }} />
       </div>
     </div>
@@ -88,25 +88,25 @@ const ProgressBar = ({ value, max = 100, label, color = "emerald" }) => {
 const Accordion = ({ title, children, defaultOpen = false }) => {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border border-slate-700 rounded-lg overflow-hidden">
-      <button onClick={() => setOpen(!open)} className="w-full px-4 py-3 flex items-center justify-between bg-slate-800/50 hover:bg-slate-800 transition-colors text-left">
-        <span className="font-medium text-white">{title}</span>
-        {open ? <ChevronDown className="w-5 h-5 text-slate-400 shrink-0" /> : <ChevronRight className="w-5 h-5 text-slate-400 shrink-0" />}
+    <div className="border border-rule rounded-lg overflow-hidden">
+      <button onClick={() => setOpen(!open)} className="w-full px-4 py-3 flex items-center justify-between bg-white hover:bg-white transition-colors text-left">
+        <span className="font-medium text-ink">{title}</span>
+        {open ? <ChevronDown className="w-5 h-5 text-muted shrink-0" /> : <ChevronRight className="w-5 h-5 text-muted shrink-0" />}
       </button>
-      {open && <div className="p-4 bg-slate-900/50">{children}</div>}
+      {open && <div className="p-4 bg-paper2">{children}</div>}
     </div>
   );
 };
 
 const GapBar = ({ label, open, closed }) => (
   <div className="space-y-1.5">
-    <p className="text-xs text-slate-400">{label}</p>
+    <p className="text-xs text-muted">{label}</p>
     <div className="flex items-center gap-2">
-      <div className="flex-1 h-3 bg-slate-700 rounded-full overflow-hidden relative">
-        <div className="h-full bg-cyan-500/30 rounded-full absolute left-0 top-0" style={{ width: `${closed}%` }} />
-        <div className="h-full bg-emerald-500 rounded-full absolute left-0 top-0" style={{ width: `${open}%` }} />
+      <div className="flex-1 h-3 bg-track rounded-full overflow-hidden relative">
+        <div className="h-full bg-navy/30 rounded-full absolute left-0 top-0" style={{ width: `${closed}%` }} />
+        <div className="h-full bg-accent rounded-full absolute left-0 top-0" style={{ width: `${open}%` }} />
       </div>
-      <span className="text-xs text-slate-300 w-28 text-right font-mono">{open}% / {closed}%</span>
+      <span className="text-xs text-body w-28 text-right font-mono">{open}% / {closed}%</span>
     </div>
   </div>
 );
@@ -131,34 +131,34 @@ function Nav() {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-950/90 backdrop-blur-sm border-b border-slate-800">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-paper/90 backdrop-blur-sm border-b border-rule">
       <div className="max-w-6xl mx-auto px-4 md:px-8 py-4 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Cpu className="w-6 h-6 text-emerald-400" />
-          <span className="font-bold text-lg text-white">Local AI Guide</span>
+          <Cpu className="w-6 h-6 text-accent" />
+          <span className="font-bold text-lg text-ink">Local AI Guide</span>
           <Badge variant="success">June 2026</Badge>
         </div>
 
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-6">
           {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => scrollTo(item.id)} className="text-slate-400 hover:text-white transition-colors text-sm bg-transparent border-none cursor-pointer">
+            <button key={item.id} onClick={() => scrollTo(item.id)} className="text-muted hover:text-ink transition-colors text-sm bg-transparent border-none cursor-pointer">
               {item.label}
             </button>
           ))}
         </div>
 
         {/* Mobile toggle */}
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden text-slate-400 hover:text-white bg-transparent border-none cursor-pointer">
+        <button onClick={() => setMobileOpen(!mobileOpen)} className="md:hidden text-muted hover:text-ink bg-transparent border-none cursor-pointer">
           {mobileOpen ? <ChevronDown className="w-6 h-6" /> : <Sliders className="w-6 h-6" />}
         </button>
       </div>
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-slate-900 border-t border-slate-800 px-4 py-3 space-y-1">
+        <div className="md:hidden bg-codebg border-t border-rule px-4 py-3 space-y-1">
           {NAV_ITEMS.map(item => (
-            <button key={item.id} onClick={() => scrollTo(item.id)} className="block w-full text-left py-2 px-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors text-sm bg-transparent border-none cursor-pointer">
+            <button key={item.id} onClick={() => scrollTo(item.id)} className="block w-full text-left py-2 px-3 rounded-lg text-muted hover:text-ink hover:bg-white transition-colors text-sm bg-transparent border-none cursor-pointer">
               {item.label}
             </button>
           ))}
@@ -243,15 +243,15 @@ function HardwareAnalyzer() {
       {/* Input Form */}
       <div className="grid md:grid-cols-2 gap-8 mb-10">
         <Card>
-          <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Settings className="w-5 h-5 text-emerald-400" /> Your Hardware</h3>
+          <h3 className="font-bold text-ink mb-4 flex items-center gap-2"><Settings className="w-5 h-5 text-accent" /> Your Hardware</h3>
           <div className="space-y-4">
             {/* Platform */}
             <div>
-              <label className="block text-sm text-slate-400 mb-1.5">Platform</label>
+              <label className="block text-sm text-muted mb-1.5">Platform</label>
               <div className="flex gap-2">
                 {[["pc","Windows / Linux"],["mac","Mac (Apple Silicon)"]].map(([val, label]) => (
                   <button key={val} onClick={() => { setPlatform(val); setGpuId(""); }}
-                    className={`flex-1 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border cursor-pointer ${platform === val ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400' : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-600'}`}>
+                    className={`flex-1 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border cursor-pointer ${platform === val ? 'bg-accentsoft border-accent/50 text-accent' : 'bg-white border-rule text-muted hover:border-rule2'}`}>
                     {label}
                   </button>
                 ))}
@@ -260,9 +260,9 @@ function HardwareAnalyzer() {
 
             {/* GPU */}
             <div>
-              <label className="block text-sm text-slate-400 mb-1.5">GPU / Chip</label>
+              <label className="block text-sm text-muted mb-1.5">GPU / Chip</label>
               <select value={gpuId} onChange={e => setGpuId(e.target.value)}
-                className="w-full px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500 cursor-pointer appearance-none">
+                className="w-full px-3 py-2.5 bg-white border border-rule rounded-lg text-ink text-sm focus:outline-none focus:border-accent cursor-pointer appearance-none">
                 <option value="">Select your GPU…</option>
                 {filteredGpus.map(g => (
                   <option key={g.id} value={g.id}>{g.name} - {g.vram}GB</option>
@@ -273,23 +273,23 @@ function HardwareAnalyzer() {
 
             {/* RAM */}
             <div>
-              <label className="block text-sm text-slate-400 mb-1.5">System RAM (GB)</label>
+              <label className="block text-sm text-muted mb-1.5">System RAM (GB)</label>
               <input type="number" value={ram} onChange={e => setRam(e.target.value)} placeholder="e.g. 32, 64, 128"
-                className="w-full px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500 placeholder:text-slate-600" />
+                className="w-full px-3 py-2.5 bg-white border border-rule rounded-lg text-ink text-sm focus:outline-none focus:border-accent placeholder:text-faint2" />
             </div>
           </div>
         </Card>
 
         <Card>
-          <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Sliders className="w-5 h-5 text-cyan-400" /> Your Usage</h3>
+          <h3 className="font-bold text-ink mb-4 flex items-center gap-2"><Sliders className="w-5 h-5 text-navy" /> Your Usage</h3>
           <div className="space-y-4">
             {/* Use case */}
             <div>
-              <label className="block text-sm text-slate-400 mb-1.5">Primary Use Case</label>
+              <label className="block text-sm text-muted mb-1.5">Primary Use Case</label>
               <div className="grid grid-cols-2 gap-2">
                 {[["coding","Coding"],["general","General Chat"],["research","Research"],["claude-code","Claude Code"]].map(([val, label]) => (
                   <button key={val} onClick={() => setUseCase(val)}
-                    className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all border cursor-pointer ${useCase === val ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-400' : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-600'}`}>
+                    className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-all border cursor-pointer ${useCase === val ? 'bg-navysoft border-navy/50 text-navy' : 'bg-white border-rule text-muted hover:border-rule2'}`}>
                     {label}
                   </button>
                 ))}
@@ -298,15 +298,15 @@ function HardwareAnalyzer() {
 
             {/* Monthly API spend */}
             <div>
-              <label className="block text-sm text-slate-400 mb-1.5">Current Monthly API Spend ($)</label>
+              <label className="block text-sm text-muted mb-1.5">Current Monthly API Spend ($)</label>
               <input type="number" value={monthlySpend} onChange={e => setMonthlySpend(e.target.value)} placeholder="e.g. 50, 100, 200"
-                className="w-full px-3 py-2.5 bg-slate-800 border border-slate-700 rounded-lg text-white text-sm focus:outline-none focus:border-emerald-500 placeholder:text-slate-600" />
+                className="w-full px-3 py-2.5 bg-white border border-rule rounded-lg text-ink text-sm focus:outline-none focus:border-accent placeholder:text-faint2" />
             </div>
 
             {gpu && (
-              <div className="p-3 bg-slate-900/80 rounded-lg border border-slate-700">
-                <div className="flex justify-between text-sm"><span className="text-slate-400">Effective VRAM</span><span className="text-white font-medium">{Math.floor(effectiveVram)}GB {gpu.platform === "mac" && "(75% of unified)"}</span></div>
-                <div className="flex justify-between text-sm mt-1"><span className="text-slate-400">Compatible models</span><span className="text-emerald-400 font-medium">{compatibleModels.length}</span></div>
+              <div className="p-3 bg-paper2 rounded-lg border border-rule">
+                <div className="flex justify-between text-sm"><span className="text-muted">Effective VRAM</span><span className="text-ink font-medium">{Math.floor(effectiveVram)}GB {gpu.platform === "mac" && "(75% of unified)"}</span></div>
+                <div className="flex justify-between text-sm mt-1"><span className="text-muted">Compatible models</span><span className="text-accent font-medium">{compatibleModels.length}</span></div>
               </div>
             )}
           </div>
@@ -317,10 +317,10 @@ function HardwareAnalyzer() {
       {showCpuWarning && (
         <Card className="mb-8">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="w-6 h-6 text-amber-400 shrink-0 mt-0.5" />
+            <AlertTriangle className="w-6 h-6 text-gold shrink-0 mt-0.5" />
             <div>
-              <h3 className="font-bold text-white">A GPU is strongly recommended</h3>
-              <p className="text-slate-400 text-sm mt-1">Running LLMs on CPU only gives 1-3 tokens/second, too slow to be practical. Even a budget GPU like the Intel Arc B580 ($249, 12GB) or a used RTX 3060 12GB ($200) will make local AI usable. For Mac users, Apple Silicon's unified memory acts as GPU memory.</p>
+              <h3 className="font-bold text-ink">A GPU is strongly recommended</h3>
+              <p className="text-muted text-sm mt-1">Running LLMs on CPU only gives 1-3 tokens/second, too slow to be practical. Even a budget GPU like the Intel Arc B580 ($249, 12GB) or a used RTX 3060 12GB ($200) will make local AI usable. For Mac users, Apple Silicon's unified memory acts as GPU memory.</p>
             </div>
           </div>
         </Card>
@@ -332,12 +332,12 @@ function HardwareAnalyzer() {
           {/* Best Model Recommendation */}
           <Card highlight className="mb-6">
             <div className="flex items-start gap-4">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0">
-                <Zap className="w-6 h-6 text-emerald-400" />
+              <div className="w-12 h-12 rounded-xl bg-accentsoft flex items-center justify-center shrink-0">
+                <Zap className="w-6 h-6 text-accent" />
               </div>
               <div className="flex-1">
-                <p className="text-xs text-emerald-400 font-mono uppercase tracking-wider mb-1">Top Recommendation for Your {gpu.name}</p>
-                <h3 className="text-2xl font-bold text-white">{bestModel ? bestModel.name : "No compatible models"}</h3>
+                <p className="text-xs text-accent font-sans font-semibold uppercase tracking-wider mb-1">Top Recommendation for Your {gpu.name}</p>
+                <h3 className="text-2xl font-bold text-ink">{bestModel ? bestModel.name : "No compatible models"}</h3>
                 {bestModel && (
                   <div className="flex flex-wrap gap-3 mt-2">
                     <Badge variant="success">{bestModel.swe}% SWE-bench</Badge>
@@ -351,14 +351,14 @@ function HardwareAnalyzer() {
 
           {/* Compatible Models Table */}
           <Card className="mb-6">
-            <h3 className="font-bold text-white mb-4">All Compatible Models ({compatibleModels.length})</h3>
+            <h3 className="font-bold text-ink mb-4">All Compatible Models ({compatibleModels.length})</h3>
             {compatibleModels.length > 0 ? (
               <DataTable
                 headers={["Model", "VRAM Needed", "SWE-bench", "Speed", "Quality", "Best For"]}
                 rows={compatibleModels.map((m, i) => [
-                  <span className={i === 0 ? "text-emerald-400 font-medium" : ""}>{m.name} {i === 0 && "⭐"}</span>,
+                  <span className={i === 0 ? "text-accent font-medium" : ""}>{m.name} {i === 0 && "⭐"}</span>,
                   `${m.vramReq}GB`,
-                  <span className="text-emerald-400">{m.swe}%</span>,
+                  <span className="text-accent">{m.swe}%</span>,
                   m.speed,
                   <Badge variant={m.tier === "excellent" ? "success" : m.tier === "great" ? "info" : m.tier === "good" ? "warning" : "default"}>{m.tier}</Badge>,
                   m.useCase,
@@ -366,26 +366,26 @@ function HardwareAnalyzer() {
                 compact
               />
             ) : (
-              <p className="text-slate-400 text-sm">No models fit your current VRAM. Consider upgrading your GPU.</p>
+              <p className="text-muted text-sm">No models fit your current VRAM. Consider upgrading your GPU.</p>
             )}
           </Card>
 
           {/* Cost Savings */}
           {breakeven && (
             <Card className="mb-6">
-              <h3 className="font-bold text-white mb-4 flex items-center gap-2"><DollarSign className="w-5 h-5 text-emerald-400" /> Cost Savings Estimate</h3>
+              <h3 className="font-bold text-ink mb-4 flex items-center gap-2"><DollarSign className="w-5 h-5 text-accent" /> Cost Savings Estimate</h3>
               <div className="grid grid-cols-3 gap-6 text-center">
                 <div>
-                  <p className="text-3xl font-bold text-emerald-400">{breakeven} mo</p>
-                  <p className="text-sm text-slate-400">GPU breakeven</p>
+                  <p className="text-3xl font-bold text-accent">{breakeven} mo</p>
+                  <p className="text-sm text-muted">GPU breakeven</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-white">${spend * 12}</p>
-                  <p className="text-sm text-slate-400">Yearly API spend</p>
+                  <p className="text-3xl font-bold text-ink">${spend * 12}</p>
+                  <p className="text-sm text-muted">Yearly API spend</p>
                 </div>
                 <div>
-                  <p className="text-3xl font-bold text-cyan-400">${Math.max(0, (spend * 12) - gpu.price)}</p>
-                  <p className="text-sm text-slate-400">Year 1 net savings</p>
+                  <p className="text-3xl font-bold text-navy">${Math.max(0, (spend * 12) - gpu.price)}</p>
+                  <p className="text-sm text-muted">Year 1 net savings</p>
                 </div>
               </div>
             </Card>
@@ -393,7 +393,7 @@ function HardwareAnalyzer() {
 
           {/* Quick Setup */}
           <Card>
-            <h3 className="font-bold text-white mb-4 flex items-center gap-2"><Terminal className="w-5 h-5 text-emerald-400" /> Quick Start for Your {gpu.name}</h3>
+            <h3 className="font-bold text-ink mb-4 flex items-center gap-2"><Terminal className="w-5 h-5 text-accent" /> Quick Start for Your {gpu.name}</h3>
             <CodeBlock title="Terminal">{`# Install Ollama
 ${gpu.platform === "mac" ? "brew install ollama" : "curl -fsSL https://ollama.com/install.sh | sh"}
 
@@ -404,7 +404,7 @@ ollama pull ${bestModel ? bestModel.name.toLowerCase().replace(/ /g, "-").replac
 ollama run ${bestModel ? bestModel.name.toLowerCase().replace(/ /g, "-").replace("qwen-3.6-27b","qwen3.6:27b").replace("qwen3-coder-next","qwen3-coder-next").replace("glm-4.7-flash","glm-4.7-flash").replace("devstral-small-2","devstral-small-2").replace("gemma-4-26b-moe","gemma4:26b").replace("phi-5-medium-14b","phi-5:14b").replace("mistral-7b","mistral:7b").replace("llama-3.1-8b","llama3.1:8b") : "qwen3.6:27b"}`}</CodeBlock>
             {(useCase === "claude-code" || useCase === "coding") && (
               <div className="mt-4">
-                <p className="text-xs text-slate-500 mb-2">Claude Code integration:</p>
+                <p className="text-xs text-faint mb-2">Claude Code integration:</p>
                 <CodeBlock title="~/.zshrc">{`export ANTHROPIC_BASE_URL="http://localhost:11434"
 export ANTHROPIC_AUTH_TOKEN="ollama"
 export ANTHROPIC_API_KEY=""
@@ -417,9 +417,9 @@ export ANTHROPIC_DEFAULT_OPUS_MODEL="${bestModel ? bestModel.name.toLowerCase().
 
           {/* Upgrade suggestion */}
           {effectiveVram < 16 && (
-            <div className="mt-6 p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg">
-              <p className="text-amber-400 font-medium">💡 Upgrade Suggestion</p>
-              <p className="text-slate-300 text-sm mt-1">
+            <div className="mt-6 p-4 bg-goldsoft border border-gold/30 rounded-lg">
+              <p className="text-gold font-medium">💡 Upgrade Suggestion</p>
+              <p className="text-body text-sm mt-1">
                 With {Math.floor(effectiveVram)}GB effective VRAM, you're limited to smaller models. A used RTX 3090 ($600-1,050, 24GB) would unlock Qwen 3.6 27B (77.2% SWE-bench), the best local coder available. An RTX 5060 Ti 16GB (~$550) is the best new-purchase value.
               </p>
             </div>
@@ -433,8 +433,8 @@ export ANTHROPIC_DEFAULT_OPUS_MODEL="${bestModel ? bestModel.name.toLowerCase().
 /* ─── Tutorial ─── */
 
 const StepNum = ({ n, color = "emerald" }) => {
-  const bg = { emerald: "bg-emerald-500", cyan: "bg-cyan-500", amber: "bg-amber-500" };
-  return <div className={`w-8 h-8 rounded-full ${bg[color]} flex items-center justify-center text-black font-bold text-sm shrink-0`}>{n}</div>;
+  const bg = { emerald: "bg-accent", cyan: "bg-navy", amber: "bg-gold" };
+  return <div className={`w-8 h-8 rounded-full ${bg[color]} flex items-center justify-center text-white font-bold text-sm shrink-0`}>{n}</div>;
 };
 
 function TutorialSection() {
@@ -461,7 +461,7 @@ brew install ollama
     : "Add these to ~/.zshrc (or ~/.bashrc), then reload the shell.";
 
   return (
-    <Section id="tutorial" className="bg-slate-900/50">
+    <Section id="tutorial" className="bg-paper2">
       <SectionTitle
         eyebrow="Step by Step"
         title="Set Up Local AI From Scratch"
@@ -471,33 +471,33 @@ brew install ollama
       {/* OS selector */}
       <div className="flex gap-2 mb-8">
         {[["mac", "macOS"], ["windows", "Windows"], ["linux", "Linux"]].map(([k, l]) => (
-          <button key={k} onClick={() => setOs(k)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${os === k ? 'bg-emerald-500 text-black' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>{l}</button>
+          <button key={k} onClick={() => setOs(k)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${os === k ? 'bg-accent text-white' : 'bg-white text-muted hover:text-ink'}`}>{l}</button>
         ))}
       </div>
 
       <div className="space-y-6">
         {/* Step 1 */}
         <Card>
-          <div className="flex items-center gap-3 mb-4"><StepNum n="1" /><h3 className="font-bold text-white flex items-center gap-2"><Download className="w-4 h-4 text-emerald-400" /> Install Ollama</h3></div>
-          <p className="text-sm text-slate-400 mb-3">Ollama pulls models and serves them on your machine over a local HTTP API. Everything else in this guide talks to it.</p>
+          <div className="flex items-center gap-3 mb-4"><StepNum n="1" /><h3 className="font-bold text-ink flex items-center gap-2"><Download className="w-4 h-4 text-accent" /> Install Ollama</h3></div>
+          <p className="text-sm text-muted mb-3">Ollama pulls models and serves them on your machine over a local HTTP API. Everything else in this guide talks to it.</p>
           <CodeBlock title="Terminal">{install[os]}</CodeBlock>
-          <p className="text-sm text-slate-400 mt-3 mb-2">Confirm it installed:</p>
+          <p className="text-sm text-muted mt-3 mb-2">Confirm it installed:</p>
           <CodeBlock title="Terminal">{`ollama --version`}</CodeBlock>
         </Card>
 
         {/* Step 2 */}
         <Card>
-          <div className="flex items-center gap-3 mb-4"><StepNum n="2" /><h3 className="font-bold text-white">Make sure the server is running</h3></div>
-          <p className="text-sm text-slate-400 mb-3">{serveNote[os]}</p>
+          <div className="flex items-center gap-3 mb-4"><StepNum n="2" /><h3 className="font-bold text-ink">Make sure the server is running</h3></div>
+          <p className="text-sm text-muted mb-3">{serveNote[os]}</p>
           <CodeBlock title="Terminal">{`curl http://localhost:11434
 # Ollama is running`}</CodeBlock>
-          <p className="text-sm text-slate-500 mt-3">No curl handy? Open http://localhost:11434 in a browser instead. Same answer.</p>
+          <p className="text-sm text-faint mt-3">No curl handy? Open http://localhost:11434 in a browser instead. Same answer.</p>
         </Card>
 
         {/* Step 3 */}
         <Card>
-          <div className="flex items-center gap-3 mb-4"><StepNum n="3" /><h3 className="font-bold text-white">Pull a model that fits your hardware</h3></div>
-          <p className="text-sm text-slate-400 mb-3">Match the model to your VRAM: more memory buys a stronger model. If you are not sure what fits, the <button onClick={() => document.getElementById("your-setup")?.scrollIntoView({ behavior: "smooth" })} className="text-emerald-400 underline bg-transparent border-none cursor-pointer p-0 font-inherit">Analyze Your Setup</button> tool below picks one for you.</p>
+          <div className="flex items-center gap-3 mb-4"><StepNum n="3" /><h3 className="font-bold text-ink">Pull a model that fits your hardware</h3></div>
+          <p className="text-sm text-muted mb-3">Match the model to your VRAM: more memory buys a stronger model. If you are not sure what fits, the <button onClick={() => document.getElementById("your-setup")?.scrollIntoView({ behavior: "smooth" })} className="text-accent underline bg-transparent border-none cursor-pointer p-0 font-inherit">Analyze Your Setup</button> tool below picks one for you.</p>
           <CodeBlock title="Terminal">{`# 16GB VRAM or more: the best local coder
 ollama pull qwen3.6:27b
 
@@ -509,28 +509,28 @@ ollama pull llama3.1:8b
 
         {/* Step 4 */}
         <Card>
-          <div className="flex items-center gap-3 mb-4"><StepNum n="4" /><h3 className="font-bold text-white flex items-center gap-2"><Play className="w-4 h-4 text-emerald-400" /> Run it and check it answers</h3></div>
-          <p className="text-sm text-slate-400 mb-3">Start a chat in the terminal. The first run finishes the download, then drops you at a prompt.</p>
+          <div className="flex items-center gap-3 mb-4"><StepNum n="4" /><h3 className="font-bold text-ink flex items-center gap-2"><Play className="w-4 h-4 text-accent" /> Run it and check it answers</h3></div>
+          <p className="text-sm text-muted mb-3">Start a chat in the terminal. The first run finishes the download, then drops you at a prompt.</p>
           <CodeBlock title="Terminal">{`ollama run qwen3.6:27b
 
 >>> Write a two-line reminder to back up my laptop tonight.`}</CodeBlock>
-          <p className="text-sm text-slate-400 mt-3">Get a sensible reply and the model works. Type <span className="font-mono text-slate-300">/bye</span> to leave the chat.</p>
+          <p className="text-sm text-muted mt-3">Get a sensible reply and the model works. Type <span className="font-mono text-body">/bye</span> to leave the chat.</p>
         </Card>
 
         {/* Step 5 */}
         <Card>
-          <div className="flex items-center gap-3 mb-4"><StepNum n="5" color="amber" /><h3 className="font-bold text-white">Raise the context window</h3></div>
-          <p className="text-sm text-slate-400 mb-3">Ollama caps context near 4K tokens by default. Long sessions hit that ceiling and the model quietly forgets earlier turns. Bake in a bigger window with a Modelfile so you never trip over it.</p>
+          <div className="flex items-center gap-3 mb-4"><StepNum n="5" color="amber" /><h3 className="font-bold text-ink">Raise the context window</h3></div>
+          <p className="text-sm text-muted mb-3">Ollama caps context near 4K tokens by default. Long sessions hit that ceiling and the model quietly forgets earlier turns. Bake in a bigger window with a Modelfile so you never trip over it.</p>
           <CodeBlock title="Modelfile">{`FROM qwen3.6:27b
 PARAMETER num_ctx 131072`}</CodeBlock>
-          <p className="text-sm text-slate-400 mt-3 mb-2">Build the larger variant:</p>
+          <p className="text-sm text-muted mt-3 mb-2">Build the larger variant:</p>
           <CodeBlock title="Terminal">{`ollama create qwen3.6-big -f Modelfile`}</CodeBlock>
         </Card>
 
         {/* Step 6 */}
         <Card highlight>
-          <div className="flex items-center gap-3 mb-4"><StepNum n="6" color="cyan" /><h3 className="font-bold text-white flex items-center gap-2"><Terminal className="w-4 h-4 text-cyan-400" /> Hand it to Claude Code</h3></div>
-          <p className="text-sm text-slate-400 mb-3">Ollama v0.14 and later speak the Anthropic Messages API directly, so Claude Code can reach it with no proxy in between. {envNote}</p>
+          <div className="flex items-center gap-3 mb-4"><StepNum n="6" color="cyan" /><h3 className="font-bold text-ink flex items-center gap-2"><Terminal className="w-4 h-4 text-navy" /> Hand it to Claude Code</h3></div>
+          <p className="text-sm text-muted mb-3">Ollama v0.14 and later speak the Anthropic Messages API directly, so Claude Code can reach it with no proxy in between. {envNote}</p>
           <CodeBlock title={os === "windows" ? "PowerShell profile" : "~/.zshrc"}>{`export ANTHROPIC_BASE_URL="http://localhost:11434"
 export ANTHROPIC_AUTH_TOKEN="ollama"
 export ANTHROPIC_API_KEY=""
@@ -539,29 +539,29 @@ export ANTHROPIC_API_KEY=""
 export ANTHROPIC_DEFAULT_SONNET_MODEL="qwen3.6-big"
 export ANTHROPIC_DEFAULT_HAIKU_MODEL="qwen3.6-big"
 export ANTHROPIC_DEFAULT_OPUS_MODEL="qwen3.6-big"`}</CodeBlock>
-          <p className="text-sm text-slate-400 mt-3 mb-2">Reload, then start Claude Code against the local model:</p>
+          <p className="text-sm text-muted mt-3 mb-2">Reload, then start Claude Code against the local model:</p>
           <CodeBlock title="Terminal">{`source ~/.zshrc
 claude --model qwen3.6-big`}</CodeBlock>
         </Card>
 
         {/* Troubleshooting */}
         <Card>
-          <div className="flex items-center gap-3 mb-4"><Wrench className="w-5 h-5 text-amber-400" /><h3 className="font-bold text-white">When something goes wrong</h3></div>
+          <div className="flex items-center gap-3 mb-4"><Wrench className="w-5 h-5 text-gold" /><h3 className="font-bold text-ink">When something goes wrong</h3></div>
           <div className="space-y-3">
             <Accordion title="Replies crawl at 1-3 tokens per second">
-              <p className="text-sm text-slate-400">You are running on CPU. A GPU fixes it, and you do not need an expensive one. A used RTX 3060 (12GB, around $200) makes local models usable. The Hardware section has the full breakdown.</p>
+              <p className="text-sm text-muted">You are running on CPU. A GPU fixes it, and you do not need an expensive one. A used RTX 3060 (12GB, around $200) makes local models usable. The Hardware section has the full breakdown.</p>
             </Accordion>
             <Accordion title="The model will not load, or the process gets killed">
-              <p className="text-sm text-slate-400">The model needs more memory than your GPU has. Drop to a smaller model or a Q4 build, or check the analyzer for one that fits your card.</p>
+              <p className="text-sm text-muted">The model needs more memory than your GPU has. Drop to a smaller model or a Q4 build, or check the analyzer for one that fits your card.</p>
             </Accordion>
             <Accordion title="Claude Code answers but loses track mid-task">
-              <p className="text-sm text-slate-400">The context window is too small. Do Step 5 and point Claude Code at the qwen3.6-big build instead of the stock tag.</p>
+              <p className="text-sm text-muted">The context window is too small. Do Step 5 and point Claude Code at the qwen3.6-big build instead of the stock tag.</p>
             </Accordion>
             <Accordion title="Error: address already in use (port 11434)">
-              <p className="text-sm text-slate-400">Ollama is already running in the background. Skip ollama serve and carry on.</p>
+              <p className="text-sm text-muted">Ollama is already running in the background. Skip ollama serve and carry on.</p>
             </Accordion>
             <Accordion title="Error: model not found">
-              <p className="text-sm text-slate-400">Tags drift between releases. Run ollama list to see what you actually pulled, and check ollama.com/library for the current name.</p>
+              <p className="text-sm text-muted">Tags drift between releases. Run ollama list to see what you actually pulled, and check ollama.com/library for the current name.</p>
             </Accordion>
           </div>
         </Card>
@@ -616,32 +616,30 @@ export default function App() {
   const models = modelTab === "frontier" ? frontierModels : localModels;
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-sans">
+    <div className="min-h-screen bg-paper text-ink font-serif">
       <Nav />
 
       {/* ── Hero ── */}
       <header className="pt-32 pb-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-emerald-900/20 via-transparent to-cyan-900/20" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/5 rounded-full blur-3xl" />
         <div className="max-w-6xl mx-auto px-4 md:px-8 relative">
           <Badge variant="success">Updated June 26, 2026</Badge>
-          <h1 className="text-4xl md:text-6xl font-extrabold mt-4 mb-6 leading-tight tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-extrabold font-display mt-4 mb-6 leading-tight tracking-tight">
             Run AI Models Locally<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">The Gap Has Never Been Smaller</span>
+            <span className="text-accent italic">The Gap Has Never Been Smaller</span>
           </h1>
-          <p className="text-xl text-slate-400 max-w-2xl mb-8">
+          <p className="text-xl text-muted max-w-2xl mb-8">
             Open-weight models now lag frontier AI by just 4 months. DeepSeek V4, Qwen 3.6, and Kimi K2.6
             hit 80%+ on SWE-bench, at just 1–5% of the cost.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button onClick={() => document.getElementById("models")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold rounded-lg transition-colors flex items-center gap-2 border-none cursor-pointer">Explore Models <ArrowRight className="w-4 h-4" /></button>
-            <button onClick={() => document.getElementById("your-setup")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-lg transition-colors border border-slate-700 cursor-pointer">Analyze Your Setup</button>
+            <button onClick={() => document.getElementById("models")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-accent hover:bg-accentdark text-white font-semibold rounded-lg transition-colors flex items-center gap-2 border-none cursor-pointer">Explore Models <ArrowRight className="w-4 h-4" /></button>
+            <button onClick={() => document.getElementById("your-setup")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-white hover:bg-track text-ink font-semibold rounded-lg transition-colors border border-rule cursor-pointer">Analyze Your Setup</button>
           </div>
         </div>
       </header>
 
       {/* ── Stats bar ── */}
-      <Section className="border-y border-slate-800 !py-12">
+      <Section className="border-y border-rule !py-12">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {[
             { value: "~4 mo", label: "Open vs Frontier Gap", sub: "Epoch AI, May 2026" },
@@ -650,9 +648,9 @@ export default function App() {
             { value: "77.2%", label: "Best Local Coder", sub: "Qwen 3.6 27B" },
           ].map((s, i) => (
             <div key={i} className="text-center">
-              <p className="text-3xl md:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">{s.value}</p>
-              <p className="text-sm text-slate-300 mt-1">{s.label}</p>
-              <p className="text-xs text-slate-500">{s.sub}</p>
+              <p className="text-3xl md:text-4xl font-bold font-display text-accent">{s.value}</p>
+              <p className="text-sm text-body mt-1">{s.label}</p>
+              <p className="text-xs text-faint">{s.sub}</p>
             </div>
           ))}
         </div>
@@ -664,40 +662,40 @@ export default function App() {
         <div className="grid md:grid-cols-2 gap-8">
           <Card highlight>
             <h3 className="font-bold mb-1">SWE-bench Verified</h3>
-            <p className="text-xs text-slate-500 mb-4">Real-world GitHub issue resolution</p>
+            <p className="text-xs text-faint mb-4">Real-world GitHub issue resolution</p>
             <div className="space-y-3">
               <GapBar label="DeepSeek V4-Pro (open)" open={80.6} closed={88.6} />
               <GapBar label="MiniMax M3 (open)" open={80.5} closed={88.6} />
               <GapBar label="Qwen 3.6 27B (local 16GB)" open={77.2} closed={88.6} />
               <GapBar label="Qwen3-Coder-Next (3B active)" open={70.6} closed={88.6} />
             </div>
-            <p className="text-xs text-slate-500 mt-3">Closed ref: Claude Opus 4.8 = 88.6%</p>
+            <p className="text-xs text-faint mt-3">Closed ref: Claude Opus 4.8 = 88.6%</p>
           </Card>
           <Card highlight>
             <h3 className="font-bold mb-1">SWE-bench Pro (Harder)</h3>
-            <p className="text-xs text-slate-500 mb-4">Independent, contamination-resistant</p>
+            <p className="text-xs text-faint mb-4">Independent, contamination-resistant</p>
             <div className="space-y-3">
               <GapBar label="GLM-5.2 (open)" open={62.1} closed={69.2} />
               <GapBar label="MiniMax M3 (open)" open={59.0} closed={69.2} />
               <GapBar label="Kimi K2.6 (open)" open={58.6} closed={69.2} />
               <GapBar label="DeepSeek V4-Pro (open)" open={58.6} closed={69.2} />
             </div>
-            <p className="text-xs text-slate-500 mt-3">Closed ref: Claude Opus 4.8 = 69.2%</p>
+            <p className="text-xs text-faint mt-3">Closed ref: Claude Opus 4.8 = 69.2%</p>
           </Card>
         </div>
         <div className="mt-8 grid md:grid-cols-3 gap-6">
-          <Card><Clock className="w-6 h-6 text-cyan-400 mb-3" /><h3 className="font-bold text-white mb-1">4-Month Lag</h3><p className="text-sm text-slate-400">Per Epoch AI (May 2026), open-weight models trail the frontier by ~4 months, the smallest gap ever measured.</p></Card>
-          <Card><TrendingUp className="w-6 h-6 text-emerald-400 mb-3" /><h3 className="font-bold text-white mb-1">85–95% as Good</h3><p className="text-sm text-slate-400">For most coding and reasoning tasks, at 1–5% of the cost of frontier APIs.</p></Card>
-          <Card><AlertTriangle className="w-6 h-6 text-amber-400 mb-3" /><h3 className="font-bold text-white mb-1">Real Gap Remains</h3><p className="text-sm text-slate-400">On independent evals (NIST CAISI, LM Arena), agentic, abstract reasoning, and cyber tasks still strongly favor proprietary models.</p></Card>
+          <Card><Clock className="w-6 h-6 text-navy mb-3" /><h3 className="font-bold text-ink mb-1">4-Month Lag</h3><p className="text-sm text-muted">Per Epoch AI (May 2026), open-weight models trail the frontier by ~4 months, the smallest gap ever measured.</p></Card>
+          <Card><TrendingUp className="w-6 h-6 text-accent mb-3" /><h3 className="font-bold text-ink mb-1">85–95% as Good</h3><p className="text-sm text-muted">For most coding and reasoning tasks, at 1–5% of the cost of frontier APIs.</p></Card>
+          <Card><AlertTriangle className="w-6 h-6 text-gold mb-3" /><h3 className="font-bold text-ink mb-1">Real Gap Remains</h3><p className="text-sm text-muted">On independent evals (NIST CAISI, LM Arena), agentic, abstract reasoning, and cyber tasks still strongly favor proprietary models.</p></Card>
         </div>
       </Section>
 
       {/* ── Models ── */}
-      <Section id="models" className="bg-slate-900/50">
+      <Section id="models" className="bg-paper2">
         <SectionTitle eyebrow="June 2026 Leaderboard" title="Best Open-Weight Models" subtitle="Benchmarks shifted from MMLU/HumanEval (saturated) to SWE-bench and LiveCodeBench." />
         <div className="flex gap-2 mb-8">
           {[["frontier","Frontier Open Models"],["local","Best for Local HW"]].map(([k,l]) => (
-            <button key={k} onClick={() => setModelTab(k)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${modelTab === k ? 'bg-emerald-500 text-black' : 'bg-slate-800 text-slate-400 hover:text-white'}`}>{l}</button>
+            <button key={k} onClick={() => setModelTab(k)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${modelTab === k ? 'bg-accent text-white' : 'bg-white text-muted hover:text-ink'}`}>{l}</button>
           ))}
         </div>
         <div className="space-y-4">
@@ -705,15 +703,15 @@ export default function App() {
             <Card key={i} highlight={m.pick || m.swe >= 80}>
               <div className="flex flex-col lg:flex-row lg:items-center gap-4">
                 <div className="lg:w-1/4">
-                  <div className="flex items-center gap-2 flex-wrap"><h3 className="text-lg font-bold text-white">{m.name}</h3>{m.pick && <Badge variant="success">Top Pick</Badge>}</div>
+                  <div className="flex items-center gap-2 flex-wrap"><h3 className="text-lg font-bold text-ink">{m.name}</h3>{m.pick && <Badge variant="success">Top Pick</Badge>}</div>
                   <div className="flex gap-1.5 mt-1 flex-wrap"><Badge>{m.params}</Badge><Badge variant={m.type==="MoE"?"info":"default"}>{m.type}</Badge><Badge variant="purple">{m.license}</Badge></div>
                 </div>
                 <div className="lg:w-3/4 grid grid-cols-2 md:grid-cols-5 gap-3">
-                  <div><p className="text-xs text-slate-500 uppercase">VRAM (Q4)</p><p className="text-sm font-medium text-white">{m.vram}</p></div>
-                  <div><p className="text-xs text-slate-500 uppercase">Context</p><p className="text-sm font-medium text-white">{m.context}</p></div>
-                  <div><p className="text-xs text-slate-500 uppercase">SWE-bench ✓</p><p className="text-sm font-medium text-emerald-400">{m.swe}%</p></div>
-                  <div><p className="text-xs text-slate-500 uppercase">SWE Pro</p><p className="text-sm font-medium text-cyan-400">{m.swePro}%</p></div>
-                  <div><p className="text-xs text-slate-500 uppercase">LiveCodeBench</p><p className="text-sm font-medium text-white">{m.lcb}%</p></div>
+                  <div><p className="text-xs text-faint uppercase">VRAM (Q4)</p><p className="text-sm font-medium text-ink">{m.vram}</p></div>
+                  <div><p className="text-xs text-faint uppercase">Context</p><p className="text-sm font-medium text-ink">{m.context}</p></div>
+                  <div><p className="text-xs text-faint uppercase">SWE-bench ✓</p><p className="text-sm font-medium text-accent">{m.swe}%</p></div>
+                  <div><p className="text-xs text-faint uppercase">SWE Pro</p><p className="text-sm font-medium text-navy">{m.swePro}%</p></div>
+                  <div><p className="text-xs text-faint uppercase">LiveCodeBench</p><p className="text-sm font-medium text-ink">{m.lcb}%</p></div>
                 </div>
               </div>
               <div className="mt-4 grid grid-cols-2 gap-4">
@@ -723,40 +721,40 @@ export default function App() {
             </Card>
           ))}
         </div>
-        <div className="mt-8 p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg"><p className="text-amber-400 font-medium">⚠️ Benchmark Caveat</p><p className="text-slate-300 text-sm mt-1">Many scores are vendor-reported. SWE-bench Verified has documented contamination. Independent evaluators (NIST CAISI, LM Arena) consistently show wider gaps. Treat single-benchmark claims as upper bounds.</p></div>
+        <div className="mt-8 p-4 bg-goldsoft border border-gold/30 rounded-lg"><p className="text-gold font-medium">⚠️ Benchmark Caveat</p><p className="text-body text-sm mt-1">Many scores are vendor-reported. SWE-bench Verified has documented contamination. Independent evaluators (NIST CAISI, LM Arena) consistently show wider gaps. Treat single-benchmark claims as upper bounds.</p></div>
       </Section>
 
       {/* ── Hardware ── */}
       <Section id="hardware">
         <SectionTitle eyebrow="Hardware: June 2026" title="GPUs in a Memory Shortage" subtitle="GDDR7 prices surged ~90% in Q1 2026. Used RTX 3090 remains the value king." />
         <div className="grid md:grid-cols-3 gap-6 mb-12">
-          <Card><HardDrive className="w-8 h-8 text-amber-400 mb-4" /><h3 className="text-lg font-bold mb-2">16GB VRAM</h3><p className="text-slate-400 text-sm mb-4">Run 3B-active MoE models (Qwen3-Coder-Next, Gemma 4) at 60–85 t/s.</p><p className="text-2xl font-bold text-white">$429–999</p><p className="text-xs text-slate-500">RTX 5060 Ti – 5080</p></Card>
-          <Card highlight><Zap className="w-8 h-8 text-emerald-400 mb-4" /><h3 className="text-lg font-bold mb-2">24–32GB VRAM</h3><p className="text-slate-400 text-sm mb-4">Run 27B dense or large MoE. Used RTX 3090 is best VRAM-per-dollar.</p><p className="text-2xl font-bold text-white">$600–4,200</p><p className="text-xs text-slate-500">RTX 3090 used – RTX 5090</p></Card>
-          <Card><Server className="w-8 h-8 text-cyan-400 mb-4" /><h3 className="text-lg font-bold mb-2">64–128GB Unified</h3><p className="text-slate-400 text-sm mb-4">Run full 70B+ silently. M5 Max Neural Accelerators: 230 t/s on 8B.</p><p className="text-2xl font-bold text-white">$3,999+</p><p className="text-xs text-slate-500">Apple M-series</p></Card>
+          <Card><HardDrive className="w-8 h-8 text-gold mb-4" /><h3 className="text-lg font-bold mb-2">16GB VRAM</h3><p className="text-muted text-sm mb-4">Run 3B-active MoE models (Qwen3-Coder-Next, Gemma 4) at 60–85 t/s.</p><p className="text-2xl font-bold text-ink">$429–999</p><p className="text-xs text-faint">RTX 5060 Ti – 5080</p></Card>
+          <Card highlight><Zap className="w-8 h-8 text-accent mb-4" /><h3 className="text-lg font-bold mb-2">24–32GB VRAM</h3><p className="text-muted text-sm mb-4">Run 27B dense or large MoE. Used RTX 3090 is best VRAM-per-dollar.</p><p className="text-2xl font-bold text-ink">$600–4,200</p><p className="text-xs text-faint">RTX 3090 used – RTX 5090</p></Card>
+          <Card><Server className="w-8 h-8 text-navy mb-4" /><h3 className="text-lg font-bold mb-2">64–128GB Unified</h3><p className="text-muted text-sm mb-4">Run full 70B+ silently. M5 Max Neural Accelerators: 230 t/s on 8B.</p><p className="text-2xl font-bold text-ink">$3,999+</p><p className="text-xs text-faint">Apple M-series</p></Card>
         </div>
         <Card>
           <h3 className="text-lg font-bold mb-4">GPU Comparison: Street Prices June 2026</h3>
-          <DataTable headers={["GPU","VRAM","Speed (8B)","Speed (30B MoE)","Max Model (Q4)","MSRP","Street","Value"]} rows={gpus.map(g=>[<span className={g.rec?"text-emerald-400 font-medium":""}>{g.name}{g.rec&&" ⭐"}</span>,g.vram,g.speed8b,g.speed30b,g.max,g.msrp,g.street,<span>{"⭐".repeat(g.value)}</span>])} />
-          <p className="text-xs text-slate-500 mt-3">† = partial offload to system RAM, slower. Speeds measured with Q4_K_XL via llama.cpp.</p>
+          <DataTable headers={["GPU","VRAM","Speed (8B)","Speed (30B MoE)","Max Model (Q4)","MSRP","Street","Value"]} rows={gpus.map(g=>[<span className={g.rec?"text-accent font-medium":""}>{g.name}{g.rec&&" ⭐"}</span>,g.vram,g.speed8b,g.speed30b,g.max,g.msrp,g.street,<span>{"⭐".repeat(g.value)}</span>])} />
+          <p className="text-xs text-faint mt-3">† = partial offload to system RAM, slower. Speeds measured with Q4_K_XL via llama.cpp.</p>
         </Card>
         <div className="mt-8 grid md:grid-cols-2 gap-6">
-          <div className="p-4 bg-emerald-900/20 border border-emerald-500/30 rounded-lg"><p className="text-emerald-400 font-medium">💡 Best Value: Used RTX 3090</p><p className="text-slate-300 text-sm mt-1">$600–1,050 for 24GB VRAM. Runs Qwen 3.6 27B and all 3B-active MoE models at full speed.</p></div>
-          <div className="p-4 bg-amber-900/20 border border-amber-500/30 rounded-lg"><p className="text-amber-400 font-medium">⚠️ 2026 DRAM Shortage</p><p className="text-slate-300 text-sm mt-1">RTX 5090 sells at $3,500–4,200 vs $1,999 MSRP. Memory is &gt;80% of its BOM. Consider used cards or waiting.</p></div>
+          <div className="p-4 bg-accentsoft border border-accent/30 rounded-lg"><p className="text-accent font-medium">💡 Best Value: Used RTX 3090</p><p className="text-body text-sm mt-1">$600–1,050 for 24GB VRAM. Runs Qwen 3.6 27B and all 3B-active MoE models at full speed.</p></div>
+          <div className="p-4 bg-goldsoft border border-gold/30 rounded-lg"><p className="text-gold font-medium">⚠️ 2026 DRAM Shortage</p><p className="text-body text-sm mt-1">RTX 5090 sells at $3,500–4,200 vs $1,999 MSRP. Memory is &gt;80% of its BOM. Consider used cards or waiting.</p></div>
         </div>
       </Section>
 
       {/* ── Costs ── */}
-      <Section id="costs" className="bg-slate-900/50">
+      <Section id="costs" className="bg-paper2">
         <SectionTitle eyebrow="Cost Analysis: June 2026" title="Local vs Cloud: Updated Math" subtitle="Claude cut Opus 67%. DeepSeek V4-Flash is 50–100x cheaper than frontier APIs." />
         <Card className="mb-8">
           <h3 className="font-bold mb-4">API Pricing Comparison</h3>
-          <DataTable headers={["Service","Input/1M","Output/1M","Local Equivalent","Local Cost*","Breakeven"]} rows={cloudPricing.map(p=>[<span>{p.service}{p.note&&<span className="text-xs text-emerald-400 block">{p.note}</span>}</span>,p.input,p.output,p.local,<span className="text-emerald-400">{p.lCost}</span>,p.be])} />
-          <p className="text-xs text-slate-500 mt-4">*Local cost = electricity only. Prompt caching = 90% off; Batch API = 50% off.</p>
+          <DataTable headers={["Service","Input/1M","Output/1M","Local Equivalent","Local Cost*","Breakeven"]} rows={cloudPricing.map(p=>[<span>{p.service}{p.note&&<span className="text-xs text-accent block">{p.note}</span>}</span>,p.input,p.output,p.local,<span className="text-accent">{p.lCost}</span>,p.be])} />
+          <p className="text-xs text-faint mt-4">*Local cost = electricity only. Prompt caching = 90% off; Batch API = 50% off.</p>
         </Card>
         <div className="grid md:grid-cols-3 gap-6">
-          <Card><DollarSign className="w-8 h-8 text-emerald-400 mb-4" /><h3 className="font-bold mb-2">Hybrid Strategy</h3><p className="text-sm text-slate-400 mb-2">70% Haiku / 20% Sonnet / 10% Opus</p><p className="text-2xl font-bold text-emerald-400">~50% savings</p><p className="text-sm text-slate-400">vs all-Sonnet</p></Card>
-          <Card><DollarSign className="w-8 h-8 text-emerald-400 mb-4" /><h3 className="font-bold mb-2">GPU Breakeven</h3><p className="text-sm text-slate-400 mb-2">Used RTX 3090 ($800) at &gt;$60/mo spend</p><p className="text-2xl font-bold text-emerald-400">6–8 months</p><p className="text-sm text-slate-400">ROI period</p></Card>
-          <Card><DollarSign className="w-8 h-8 text-cyan-400 mb-4" /><h3 className="font-bold mb-2">V4-Flash vs Opus</h3><p className="text-sm text-slate-400 mb-2">$0.14/$0.28 vs $5/$25 per M tokens</p><p className="text-2xl font-bold text-cyan-400">50–100x</p><p className="text-sm text-slate-400">cheaper output</p></Card>
+          <Card><DollarSign className="w-8 h-8 text-accent mb-4" /><h3 className="font-bold mb-2">Hybrid Strategy</h3><p className="text-sm text-muted mb-2">70% Haiku / 20% Sonnet / 10% Opus</p><p className="text-2xl font-bold text-accent">~50% savings</p><p className="text-sm text-muted">vs all-Sonnet</p></Card>
+          <Card><DollarSign className="w-8 h-8 text-accent mb-4" /><h3 className="font-bold mb-2">GPU Breakeven</h3><p className="text-sm text-muted mb-2">Used RTX 3090 ($800) at &gt;$60/mo spend</p><p className="text-2xl font-bold text-accent">6–8 months</p><p className="text-sm text-muted">ROI period</p></Card>
+          <Card><DollarSign className="w-8 h-8 text-navy mb-4" /><h3 className="font-bold mb-2">V4-Flash vs Opus</h3><p className="text-sm text-muted mb-2">$0.14/$0.28 vs $5/$25 per M tokens</p><p className="text-2xl font-bold text-navy">50–100x</p><p className="text-sm text-muted">cheaper output</p></Card>
         </div>
       </Section>
 
@@ -769,23 +767,23 @@ export default function App() {
         <div className="grid md:grid-cols-2 gap-8">
           <div className="space-y-6">
             <Card>
-              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold text-sm">1</div><h3 className="font-bold">Install Ollama</h3></div>
+              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm">1</div><h3 className="font-bold">Install Ollama</h3></div>
               <CodeBlock title="Terminal">{`# macOS\nbrew install ollama\n\n# Linux\ncurl -fsSL https://ollama.com/install.sh | sh\n\nollama serve`}</CodeBlock>
             </Card>
             <Card>
-              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold text-sm">2</div><h3 className="font-bold">Pull Models</h3></div>
+              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white font-bold text-sm">2</div><h3 className="font-bold">Pull Models</h3></div>
               <CodeBlock title="Terminal">{`# Best local coder (77% SWE-bench)\nollama pull qwen3.6:27b\n\n# Best efficiency (3B active, 70% SWE)\nollama pull qwen3-coder-next\n\n# Fast tool-calling\nollama pull glm-4.7-flash\n\n# Multimodal\nollama pull gemma4:26b`}</CodeBlock>
             </Card>
           </div>
           <div className="space-y-6">
             <Card highlight>
-              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-cyan-500 flex items-center justify-center text-black font-bold text-sm">3</div><h3 className="font-bold">Claude Code (Native)</h3></div>
+              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-navy flex items-center justify-center text-white font-bold text-sm">3</div><h3 className="font-bold">Claude Code (Native)</h3></div>
               <CodeBlock title="~/.zshrc">{`export ANTHROPIC_BASE_URL="http://localhost:11434"\nexport ANTHROPIC_AUTH_TOKEN="ollama"\nexport ANTHROPIC_API_KEY=""\n\n# Route ALL tiers locally\nexport ANTHROPIC_DEFAULT_SONNET_MODEL="qwen3.6:27b"\nexport ANTHROPIC_DEFAULT_HAIKU_MODEL="qwen3.6:27b"\nexport ANTHROPIC_DEFAULT_OPUS_MODEL="qwen3.6:27b"`}</CodeBlock>
               <CodeBlock title="Terminal">{`source ~/.zshrc\nclaude --model qwen3.6:27b`}</CodeBlock>
             </Card>
             <Card>
-              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-black font-bold text-sm">!</div><h3 className="font-bold">Fix Context Window</h3></div>
-              <p className="text-sm text-slate-400 mb-3">Ollama defaults to 4K context, which silently breaks long agentic sessions.</p>
+              <div className="flex items-center gap-3 mb-4"><div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center text-white font-bold text-sm">!</div><h3 className="font-bold">Fix Context Window</h3></div>
+              <p className="text-sm text-muted mb-3">Ollama defaults to 4K context, which silently breaks long agentic sessions.</p>
               <CodeBlock title="Modelfile.qwen3.6-claude">{`FROM qwen3.6:27b\nPARAMETER num_ctx 131072`}</CodeBlock>
               <CodeBlock title="Terminal">{`ollama create qwen3.6-claude -f Modelfile\nclaude --model qwen3.6-claude`}</CodeBlock>
             </Card>
@@ -799,18 +797,18 @@ export default function App() {
       {/* ── Footer ── */}
       <Section className="!py-12">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">The Best Time to Go Local</h2>
-          <p className="text-slate-400 text-lg mb-8">Open models at 85–95% of frontier quality. MoE architectures that run 70B-class models on a laptop. Claude Code that connects natively to Ollama.</p>
+          <h2 className="text-3xl md:text-4xl font-bold font-display mb-6">The Best Time to Go Local</h2>
+          <p className="text-muted text-lg mb-8">Open models at 85–95% of frontier quality. MoE architectures that run 70B-class models on a laptop. Claude Code that connects natively to Ollama.</p>
           <div className="flex flex-wrap justify-center gap-4">
-            <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-emerald-500 hover:bg-emerald-600 text-black font-semibold rounded-lg transition-colors inline-flex items-center gap-2 no-underline">Download Ollama <ExternalLink className="w-4 h-4" /></a>
-            <a href="https://lmstudio.ai" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-lg transition-colors border border-slate-700 inline-flex items-center gap-2 no-underline">Try LM Studio <ExternalLink className="w-4 h-4" /></a>
+            <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-accent hover:bg-accentdark text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2 no-underline">Download Ollama <ExternalLink className="w-4 h-4" /></a>
+            <a href="https://lmstudio.ai" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-white hover:bg-track text-ink font-semibold rounded-lg transition-colors border border-rule inline-flex items-center gap-2 no-underline">Try LM Studio <ExternalLink className="w-4 h-4" /></a>
           </div>
         </div>
       </Section>
-      <footer className="border-t border-slate-800 py-8">
+      <footer className="border-t border-rule py-8">
         <div className="max-w-6xl mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <div className="flex items-center gap-2"><Cpu className="w-5 h-5 text-emerald-400" /><span className="font-bold text-white">Local AI Guide</span><span className="text-slate-500 text-sm">• June 2026</span></div>
-          <p className="text-slate-500 text-sm text-center md:text-right">Sources: Epoch AI, NIST CAISI, LM Arena, TrendForce, vendor benchmarks.</p>
+          <div className="flex items-center gap-2"><Cpu className="w-5 h-5 text-accent" /><span className="font-bold text-ink">Local AI Guide</span><span className="text-faint text-sm">• June 2026</span></div>
+          <p className="text-faint text-sm text-center md:text-right">Sources: Epoch AI, NIST CAISI, LM Arena, TrendForce, vendor benchmarks.</p>
         </div>
       </footer>
     </div>
