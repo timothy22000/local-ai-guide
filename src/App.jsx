@@ -470,6 +470,19 @@ brew install ollama
     linux: "The install script sets up a systemd service. If you skipped that, run ollama serve in its own terminal window.",
   };
 
+  const llamacppInstall = {
+    mac: `# Homebrew (includes Metal GPU support)
+brew install llama.cpp`,
+    windows: `# Grab the prebuilt CUDA build from the releases page:
+#   https://github.com/ggml-org/llama.cpp/releases
+# (pick llama-<ver>-bin-win-cuda-x64.zip), or build with CMake like Linux.`,
+    linux: `# Build with CUDA (NVIDIA). Drop -DGGML_CUDA=ON for a CPU-only build.
+git clone --depth 1 https://github.com/ggml-org/llama.cpp
+cd llama.cpp
+cmake -B build -DGGML_CUDA=ON
+cmake --build build --config Release -j`,
+  };
+
   const envNote = os === "windows"
     ? "On Windows, set these in System Environment Variables or your PowerShell profile rather than ~/.zshrc."
     : "Add these to ~/.zshrc (or ~/.bashrc), then reload the shell.";
@@ -579,6 +592,36 @@ claude --model qwen3.6-big`}</CodeBlock>
             </Accordion>
           </div>
         </Card>
+
+        {/* Advanced: llama.cpp */}
+        <div className="pt-8 mt-2 border-t border-rule">
+          <p className="text-accent text-xs font-sans font-semibold uppercase tracking-[0.18em] mb-3 mt-6">Advanced</p>
+          <h3 className="text-2xl font-bold font-display text-ink mb-2">Faster path: llama.cpp</h3>
+          <p className="text-body font-serif leading-relaxed mb-6">Ollama is built on llama.cpp and is the easiest start. Running llama.cpp directly gives you control over GPU offload, context size, and KV-cache precision, and it is faster on big models and partial CPU/RAM offload. Recent builds speak the Anthropic Messages API, so Claude Code still points straight at it.</p>
+          <div className="space-y-6">
+            <Card>
+              <div className="flex items-center gap-3 mb-4"><StepNum n="A" /><h3 className="font-bold text-ink flex items-center gap-2"><Download className="w-4 h-4 text-accent" /> Install llama.cpp</h3></div>
+              <CodeBlock title="Terminal">{llamacppInstall[os]}</CodeBlock>
+            </Card>
+
+            <Card>
+              <div className="flex items-center gap-3 mb-4"><StepNum n="B" /><h3 className="font-bold text-ink">Pull a GGUF and start the server</h3></div>
+              <p className="text-sm text-muted mb-3">llama-server downloads the model from Hugging Face and serves it on port 8080. Find GGUF builds from unsloth, bartowski, or ggml-org.</p>
+              <CodeBlock title="Terminal">{`# Downloads the GGUF from Hugging Face, then serves it on :8080
+llama-server -hf <user>/<model>-GGUF:Q4_K_M -ngl 99 -c 32768 --jinja --port 8080`}</CodeBlock>
+              <p className="text-sm text-muted mt-3"><span className="font-mono text-body">-ngl 99</span> puts all layers on the GPU (lower it for partial CPU/RAM offload). <span className="font-mono text-body">-c 32768</span> sets the context window directly, no 4K surprise. <span className="font-mono text-body">--jinja</span> is required for tool use. Add <span className="font-mono text-body">--flash-attn</span> and <span className="font-mono text-body">--cache-type-k q8_0</span> to shrink the KV cache and fit more context.</p>
+            </Card>
+
+            <Card highlight>
+              <div className="flex items-center gap-3 mb-4"><StepNum n="C" color="cyan" /><h3 className="font-bold text-ink flex items-center gap-2"><Terminal className="w-4 h-4 text-navy" /> Point Claude Code at it</h3></div>
+              <p className="text-sm text-muted mb-3">No proxy needed. llama.cpp serves the Anthropic Messages API, and the <span className="font-mono text-body">--jinja</span> flag above is what makes the agent loop work.</p>
+              <CodeBlock title={os === "windows" ? "PowerShell profile" : "~/.zshrc"}>{`export ANTHROPIC_BASE_URL="http://localhost:8080"
+export ANTHROPIC_AUTH_TOKEN="llamacpp"
+
+claude`}</CodeBlock>
+            </Card>
+          </div>
+        </div>
       </div>
     </Section>
   );
@@ -664,7 +707,7 @@ export default function App() {
         </div>
         <div className="mt-8 p-4 bg-paper2 border border-rule rounded-lg">
           <p className="text-ink font-medium">Ollama vs llama.cpp</p>
-          <p className="text-body text-sm mt-1">Ollama is the easy on-ramp, and it is built on llama.cpp. For large models, multi-GPU rigs, or maximum throughput, run llama.cpp or vLLM directly. Ollama's defaults (like the 4K context above) are tuned for a simple first run, not speed.</p>
+          <p className="text-body text-sm mt-1">Ollama is the easy on-ramp, and it is built on llama.cpp. For large models, multi-GPU rigs, or maximum throughput, run llama.cpp directly (steps in the Tutorial above). Ollama's defaults, like the 4K context above, are tuned for a simple first run, not speed.</p>
         </div>
       </Section>
 
