@@ -115,6 +115,7 @@ const GapBar = ({ label, open, closed }) => (
 
 const NAV_ITEMS = [
   { id: "tutorial", label: "Tutorial" },
+  { id: "llamacpp", label: "llama.cpp" },
   { id: "setup", label: "Setup" },
   { id: "your-setup", label: "Your Setup" },
   { id: "gap", label: "Benchmarks" },
@@ -594,7 +595,7 @@ claude --model qwen3.6-big`}</CodeBlock>
         </Card>
 
         {/* Advanced: llama.cpp */}
-        <div className="pt-8 mt-2 border-t border-rule">
+        <div id="llamacpp" className="pt-8 mt-2 border-t border-rule">
           <p className="text-accent text-xs font-sans font-semibold uppercase tracking-[0.18em] mb-3 mt-6">Advanced</p>
           <h3 className="text-2xl font-bold font-display text-ink mb-2">Faster path: llama.cpp</h3>
           <p className="text-body font-serif leading-relaxed mb-6">Ollama is built on llama.cpp and is the easiest start. Running llama.cpp directly gives you control over GPU offload, context size, and KV-cache precision, and it is faster on big models and partial CPU/RAM offload. Recent builds speak the Anthropic Messages API, so Claude Code still points straight at it.</p>
