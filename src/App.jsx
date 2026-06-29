@@ -194,29 +194,36 @@ const GPU_DB = [
 ];
 
 const MODEL_DB = [
-  { name: "Qwen 3.6 27B",      vramReq: 17,  actGB: 17,   moe: false, swe: 77.2, tier: "excellent", useCase: "Best local coder" },
-  { name: "Devstral Small 2",  vramReq: 13,  actGB: 13,   moe: false, swe: 68,   tier: "great",     useCase: "Agentic coding, fits 16GB" },
-  { name: "Nemotron 3 Nano",   vramReq: 18,  actGB: 1.7,  moe: true,  swe: 38.8, tier: "good",      useCase: "Fast, low VRAM" },
-  { name: "Qwen 3.5 9B",       vramReq: 7,   actGB: 7,    moe: false, swe: 34,   tier: "decent",    useCase: "Runs on 12GB" },
-  { name: "Qwen 3.5 4B",       vramReq: 3,   actGB: 3,    moe: false, swe: 20,   tier: "entry",     useCase: "Edge / CPU-friendly" },
-  { name: "Qwen3-Coder-Next",  vramReq: 46,  actGB: 1.7,  moe: true,  swe: 71.3, tier: "excellent", useCase: "Needs 48GB+ or 64GB Mac" },
-  { name: "Devstral 2",        vramReq: 62,  actGB: 62,   moe: false, swe: 72.2, tier: "great",     useCase: "Dense 123B, 96GB card" },
-  { name: "gpt-oss 120B",      vramReq: 64,  actGB: 2.8,  moe: true,  swe: 58,   tier: "good",      useCase: "80GB GPU / 64GB unified" },
-  { name: "Nemotron 3 Super",  vramReq: 60,  actGB: 6.6,  moe: true,  swe: 60.5, tier: "good",      useCase: "96GB card" },
-  { name: "Qwen3.5 397B",      vramReq: 210, actGB: 9.4,  moe: true,  swe: 80.4, tier: "excellent", useCase: "Multi-GPU server" },
-  { name: "MiniMax M3",        vramReq: 230, actGB: 12.7, moe: true,  swe: 80.5, tier: "excellent", useCase: "Multi-GPU server" },
-  { name: "GLM-5.2",           vramReq: 372, actGB: 22,   moe: true,  swe: 79,   tier: "excellent", useCase: "Server (4x H200)" },
-  { name: "Kimi K2.6",         vramReq: 560, actGB: 17.6, moe: true,  swe: 80.2, tier: "excellent", useCase: "Cluster" },
-  { name: "DeepSeek V4-Pro",   vramReq: 800, actGB: 27,   moe: true,  swe: 80.6, tier: "excellent", useCase: "Cloud / cluster" },
+  { name: "Qwen 3.6 27B",      params: 27,   act: 27,   moe: false, swe: 77.2, useCase: "Best local coder" },
+  { name: "Devstral Small 2",  params: 24,   act: 24,   moe: false, swe: 68,   useCase: "Agentic coding" },
+  { name: "Nemotron 3 Nano",   params: 30,   act: 3,    moe: true,  swe: 38.8, useCase: "Fast, few active" },
+  { name: "Qwen 3.5 9B",       params: 9,    act: 9,    moe: false, swe: 34,   useCase: "Runs on 12GB" },
+  { name: "Qwen 3.5 4B",       params: 4,    act: 4,    moe: false, swe: 20,   useCase: "Edge / CPU-friendly" },
+  { name: "Qwen3-Coder-Next",  params: 80,   act: 3,    moe: true,  swe: 71.3, useCase: "Big MoE, 3B active" },
+  { name: "Devstral 2",        params: 123,  act: 123,  moe: false, swe: 72.2, useCase: "Dense 123B" },
+  { name: "gpt-oss 120B",      params: 117,  act: 5.1,  moe: true,  swe: 58,   useCase: "OpenAI open weight" },
+  { name: "Nemotron 3 Super",  params: 120,  act: 12,   moe: true,  swe: 60.5, useCase: "Mid MoE" },
+  { name: "Qwen3.5 397B",      params: 397,  act: 17,   moe: true,  swe: 80.4, useCase: "Frontier MoE" },
+  { name: "MiniMax M3",        params: 428,  act: 23,   moe: true,  swe: 80.5, useCase: "Frontier MoE" },
+  { name: "GLM-5.2",           params: 744,  act: 40,   moe: true,  swe: 79,   useCase: "Frontier MoE" },
+  { name: "Kimi K2.6",         params: 1100, act: 32,   moe: true,  swe: 80.2, useCase: "Frontier MoE" },
+  { name: "DeepSeek V4-Pro",   params: 1600, act: 49,   moe: true,  swe: 80.6, useCase: "Frontier MoE" },
 ];
 
 // Decoding is memory-bound: tok/s ~= bandwidth / bytes read per token.
-// Dense reads all weights; MoE reads active experts plus always-on layers (~20% of total).
-function estTps(bw, m) {
-  if (!bw || !m) return 0;
-  const perTokenGB = m.moe ? (m.actGB + 0.2 * m.vramReq) : m.vramReq;
-  const eff = m.moe ? 0.7 : 0.82;
-  return Math.round((eff * bw) / perTokenGB);
+// Dense reads all weights each token; MoE reads only active experts (+ ~20% always-on layers).
+const BPP = { q4: 0.55, q8: 1.06, fp16: 2.0 };   // GB of weights per billion params
+const RAM_BW = 80;                                // GB/s, typical DDR5 dual-channel (offload path)
+const weightsGB = (m, q) => m.params * BPP[q];
+const perTokenGB = (m, q) => { const w = weightsGB(m, q); return m.moe ? (m.act * BPP[q] + 0.2 * w) : w; };
+const tierOf = (m, q, vram, ram) => { const w = weightsGB(m, q); return w <= vram ? "gpu" : (w <= vram + ram ? "offload" : "no"); };
+function estTps(m, q, bw, vram) {
+  if (!bw) return 0;
+  const pt = perTokenGB(m, q), eff = m.moe ? 0.7 : 0.82, w = weightsGB(m, q);
+  if (w <= vram) return Math.round((eff * bw) / pt);
+  const f = Math.max(0, Math.min(1, vram / w));   // fraction of weights resident in VRAM
+  const t = (pt * f) / bw + (pt * (1 - f)) / RAM_BW;
+  return Math.max(1, Math.round(eff / t));
 }
 
 function HardwareAnalyzer() {
@@ -224,14 +231,17 @@ function HardwareAnalyzer() {
   const [gpuId, setGpuId] = useState("");
   const [ram, setRam] = useState("");
   const [useCase, setUseCase] = useState("");
+  const [quant, setQuant] = useState("q4");
 
   const gpu = GPU_DB.find(g => g.id === gpuId);
   const effectiveVram = gpu ? (gpu.platform === "mac" ? gpu.vram * 0.75 : gpu.vram) : 0;
-  const compatibleModels = MODEL_DB
-    .filter(m => m.vramReq <= effectiveVram)
+  const ramGB = parseFloat(ram) || 0;
+  const ranked = MODEL_DB
+    .map(m => ({ ...m, t: tierOf(m, quant, effectiveVram, ramGB), w: weightsGB(m, quant), tps: estTps(m, quant, gpu ? gpu.bw : 0, effectiveVram) }))
     .sort((a, b) => b.swe - a.swe);
-
-  const bestModel = compatibleModels[0];
+  const runnable = ranked.filter(m => m.t !== "no");
+  const counts = { gpu: ranked.filter(m => m.t === "gpu").length, offload: ranked.filter(m => m.t === "offload").length, no: ranked.filter(m => m.t === "no").length };
+  const bestModel = ranked.find(m => m.t === "gpu");
   const filteredGpus = GPU_DB.filter(g => g.id !== "none" && (platform === "" || g.platform === platform || g.platform === "any"));
   const showResults = gpu && gpu.id !== "none";
   const showCpuWarning = gpu && gpu.id === "none";
@@ -241,7 +251,7 @@ function HardwareAnalyzer() {
       <SectionTitle
         eyebrow="Interactive Tool"
         title="Analyze Your Setup"
-        subtitle="Enter your hardware to get model recommendations that fit your VRAM, with speed estimates and ready-to-run setup commands."
+        subtitle="See what runs fully on your GPU, what offloads to system RAM, and the estimated speed at each quantization level."
       />
 
       {/* Input Form */}
@@ -280,6 +290,20 @@ function HardwareAnalyzer() {
               <label className="block text-sm text-muted mb-1.5">System RAM (GB)</label>
               <input type="number" value={ram} onChange={e => setRam(e.target.value)} placeholder="e.g. 32, 64, 128"
                 className="w-full px-3 py-2.5 bg-white border border-rule rounded-lg text-ink text-sm focus:outline-none focus:border-accent placeholder:text-faint2" />
+              <p className="text-xs text-faint mt-1">Used for CPU/RAM offload when a model is too big for VRAM.</p>
+            </div>
+
+            {/* Quantization */}
+            <div>
+              <label className="block text-sm text-muted mb-1.5">Quantization</label>
+              <div className="flex gap-2">
+                {[["q4","Q4"],["q8","Q8"],["fp16","FP16"]].map(([val, label]) => (
+                  <button key={val} onClick={() => setQuant(val)}
+                    className={`flex-1 px-3 py-2.5 rounded-lg text-sm font-medium transition-all border cursor-pointer ${quant === val ? 'bg-accentsoft border-accent/50 text-accent' : 'bg-white border-rule text-muted hover:border-rule2'}`}>
+                    {label}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </Card>
@@ -303,8 +327,8 @@ function HardwareAnalyzer() {
             {gpu && (
               <div className="p-3 bg-paper2 rounded-lg border border-rule">
                 <div className="flex justify-between text-sm"><span className="text-muted">Effective VRAM</span><span className="text-ink font-medium">{Math.floor(effectiveVram)}GB {gpu.platform === "mac" && "(75% of unified)"}</span></div>
-                <div className="flex justify-between text-sm mt-1"><span className="text-muted">Compatible models</span><span className="text-accent font-medium">{compatibleModels.length}</span></div>
                 <div className="flex justify-between text-sm mt-1"><span className="text-muted">Memory bandwidth</span><span className="text-ink font-medium">{gpu.bw} GB/s</span></div>
+                <div className="flex justify-between text-sm mt-1"><span className="text-muted">Fully on GPU ({quant.toUpperCase()})</span><span className="text-accent font-medium">{counts.gpu} of {ranked.length}</span></div>
               </div>
             )}
           </div>
@@ -327,6 +351,13 @@ function HardwareAnalyzer() {
       {/* Results */}
       {showResults && (
         <>
+          {/* Compatibility summary */}
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            <div className="p-4 rounded-lg bg-accentsoft border border-accent/30"><p className="text-3xl font-bold font-display text-accent">{counts.gpu}</p><p className="text-xs text-body mt-1 font-sans uppercase tracking-wide">Run on GPU</p></div>
+            <div className="p-4 rounded-lg bg-goldsoft border border-gold/30"><p className="text-3xl font-bold font-display text-gold">{counts.offload}</p><p className="text-xs text-body mt-1 font-sans uppercase tracking-wide">CPU offloaded</p></div>
+            <div className="p-4 rounded-lg bg-paper2 border border-rule"><p className="text-3xl font-bold font-display text-muted">{counts.no}</p><p className="text-xs text-body mt-1 font-sans uppercase tracking-wide">Won't run</p></div>
+          </div>
+
           {/* Best Model Recommendation */}
           <Card highlight className="mb-6">
             <div className="flex items-start gap-4">
@@ -339,7 +370,7 @@ function HardwareAnalyzer() {
                 {bestModel && (
                   <div className="flex flex-wrap gap-3 mt-2">
                     <Badge variant="success">{bestModel.swe}% SWE-bench</Badge>
-                    <Badge variant="info">~{estTps(gpu.bw, bestModel)} tok/s</Badge>
+                    <Badge variant="info">~{bestModel.tps} tok/s</Badge>
                     <Badge>{bestModel.useCase}</Badge>
                   </div>
                 )}
@@ -347,31 +378,31 @@ function HardwareAnalyzer() {
             </div>
           </Card>
 
-          {/* Compatible Models Table */}
+          {/* Models Table */}
           <Card className="mb-6">
-            <h3 className="font-bold text-ink mb-4">All Compatible Models ({compatibleModels.length})</h3>
-            {compatibleModels.length > 0 ? (
+            <h3 className="font-bold text-ink mb-4">What runs on your {gpu.name} ({quant.toUpperCase()})</h3>
+            {runnable.length > 0 ? (
               <DataTable
-                headers={["Model", "VRAM (Q4)", "SWE-bench", "Est. tok/s", "Quality", "Best For"]}
-                rows={compatibleModels.map((m, i) => [
-                  <span className={i === 0 ? "text-accent font-medium" : ""}>{m.name} {i === 0 && "⭐"}</span>,
-                  `${m.vramReq}GB`,
+                headers={["Model", "Weights", "SWE-bench", "Est. tok/s", "Status", "Best For"]}
+                rows={runnable.map((m) => [
+                  <span className={bestModel && m.name === bestModel.name ? "text-accent font-medium" : ""}>{m.name}{bestModel && m.name === bestModel.name && " ⭐"}</span>,
+                  `${m.w < 100 ? m.w.toFixed(1) : Math.round(m.w)}GB`,
                   <span className="text-accent">{m.swe}%</span>,
-                  <span className="text-navy font-medium">~{estTps(gpu.bw, m)}</span>,
-                  <Badge variant={m.tier === "excellent" ? "success" : m.tier === "great" ? "info" : m.tier === "good" ? "warning" : "default"}>{m.tier}</Badge>,
+                  <span className="text-navy font-medium">~{m.tps}</span>,
+                  m.t === "gpu" ? <Badge variant="success">GPU</Badge> : <Badge variant="warning">Offload</Badge>,
                   m.useCase,
                 ])}
                 compact
               />
             ) : (
-              <p className="text-muted text-sm">No models fit your current VRAM. Consider upgrading your GPU.</p>
+              <p className="text-muted text-sm">Nothing fits, even with RAM offload. Add your system RAM above, or pick a smaller quant.</p>
             )}
           </Card>
 
           {/* How the estimate works */}
           <div className="mb-6 p-4 bg-navysoft border border-navy/30 rounded-lg">
             <p className="text-navy font-medium">How the tok/s estimate works</p>
-            <p className="text-body text-sm mt-1">Decoding is memory-bound: each token reads the model weights from memory once, so tokens per second is roughly memory bandwidth divided by the bytes read per token. Dense models read every weight; a mixture-of-experts model reads only its active experts, which is why an 80B model with 3B active runs far faster than its size suggests. These are rough ceilings. Real throughput also depends on quantization, context length, and CPU/RAM offload, so for a tuned number (your exact RAM speed, quant, and offload) try <a href="https://runthisllm.com" target="_blank" rel="noopener noreferrer" className="text-accent underline">runthisllm.com</a>.</p>
+            <p className="text-body text-sm mt-1">Decoding is memory-bound: each token reads the model weights from memory once, so tokens per second is roughly memory bandwidth divided by the bytes read per token. Dense models read every weight; a mixture-of-experts model reads only its active experts, which is why an 80B model with 3B active runs far faster than its size suggests. These are rough ceilings. Quantization and RAM offload are modeled here (offload assumes ~80 GB/s DDR5 and is much slower). KV cache from long context and your exact RAM speed are not, so for a precise number try <a href="https://runthisllm.com" target="_blank" rel="noopener noreferrer" className="text-accent underline">runthisllm.com</a>.</p>
           </div>
 
           {/* Quick Setup */}
