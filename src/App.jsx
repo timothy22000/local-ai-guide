@@ -194,20 +194,20 @@ const GPU_DB = [
 ];
 
 const MODEL_DB = [
-  { name: "Qwen 3.6 27B",       vramReq: 16, swe: 77.2, speed: "fast",  tier: "excellent", useCase: "Best local coder" },
-  { name: "Qwen3-Coder-Next",   vramReq: 12, swe: 70.6, speed: "very fast", tier: "excellent", useCase: "Best efficiency (3B active)" },
-  { name: "Devstral Small 2",   vramReq: 15, swe: 68,   speed: "fast",  tier: "great", useCase: "Multi-file agentic coding" },
-  { name: "Gemma 4 26B MoE",    vramReq: 12, swe: 65,   speed: "fast",  tier: "great", useCase: "Multimodal + coding" },
-  { name: "Llama 4 Maverick",   vramReq: 24, swe: 62,   speed: "medium",tier: "good",  useCase: "General purpose, 1M context" },
-  { name: "Mistral Small 4",    vramReq: 12, swe: 60,   speed: "very fast", tier: "good", useCase: "Agentic, fast MoE" },
-  { name: "gpt-oss 120B",       vramReq: 14, swe: 58,   speed: "fast",  tier: "good",  useCase: "OpenAI open-weight" },
-  { name: "GLM-4.7 Flash",      vramReq: 10, swe: 55,   speed: "fastest",tier: "good", useCase: "Speed + tool calling" },
-  { name: "Phi-5 Medium 14B",   vramReq: 8,  swe: 52,   speed: "fast",  tier: "decent",useCase: "Edge / low-VRAM" },
-  { name: "Llama 3.1 8B",       vramReq: 6,  swe: 38,   speed: "fastest",tier: "entry",useCase: "Minimal hardware" },
-  { name: "Mistral 7B",         vramReq: 5,  swe: 32,   speed: "fastest",tier: "entry",useCase: "Quick responses only" },
-  { name: "Qwen 3.5 397B MoE",  vramReq: 24, swe: 77,   speed: "medium",tier: "excellent", useCase: "Frontier MoE (needs 24GB+)" },
-  { name: "Llama 3.3 70B",      vramReq: 42, swe: 58,   speed: "slow",  tier: "good", useCase: "Needs 48GB+ or Mac 64GB" },
-  { name: "Qwen 2.5 72B",       vramReq: 42, swe: 60,   speed: "slow",  tier: "good", useCase: "Needs 48GB+ or Mac 64GB" },
+  { name: "Qwen 3.6 27B",      vramReq: 17,  swe: 77.2, speed: "fast",      tier: "excellent", useCase: "Best local coder" },
+  { name: "Devstral Small 2",  vramReq: 13,  swe: 68,   speed: "fast",      tier: "great",     useCase: "Agentic coding, fits 16GB" },
+  { name: "Nemotron 3 Nano",   vramReq: 18,  swe: 38.8, speed: "very fast", tier: "good",      useCase: "Fast, low VRAM" },
+  { name: "Qwen 3.5 9B",       vramReq: 7,   swe: 34,   speed: "fastest",   tier: "decent",    useCase: "Runs on 12GB" },
+  { name: "Qwen 3.5 4B",       vramReq: 3,   swe: 20,   speed: "fastest",   tier: "entry",     useCase: "Edge / CPU-friendly" },
+  { name: "Qwen3-Coder-Next",  vramReq: 46,  swe: 71.3, speed: "fast",      tier: "excellent", useCase: "Needs 48GB+ or 64GB Mac" },
+  { name: "Devstral 2",        vramReq: 62,  swe: 72.2, speed: "medium",    tier: "great",     useCase: "Dense 123B, 96GB card" },
+  { name: "gpt-oss 120B",      vramReq: 64,  swe: 58,   speed: "fast",      tier: "good",      useCase: "80GB GPU / 64GB unified" },
+  { name: "Nemotron 3 Super",  vramReq: 60,  swe: 60.5, speed: "medium",    tier: "good",      useCase: "96GB card" },
+  { name: "Qwen3.5 397B",      vramReq: 210, swe: 80.4, speed: "slow",      tier: "excellent", useCase: "Multi-GPU server" },
+  { name: "MiniMax M3",        vramReq: 230, swe: 80.5, speed: "slow",      tier: "excellent", useCase: "Multi-GPU server" },
+  { name: "GLM-5.2",           vramReq: 372, swe: 79,   speed: "slow",      tier: "excellent", useCase: "Server (4x H200)" },
+  { name: "Kimi K2.6",         vramReq: 560, swe: 80.2, speed: "slow",      tier: "excellent", useCase: "Cluster" },
+  { name: "DeepSeek V4-Pro",   vramReq: 800, swe: 80.6, speed: "slow",      tier: "excellent", useCase: "Cloud / cluster" },
 ];
 
 function HardwareAnalyzer() {
@@ -543,22 +543,22 @@ export default function App() {
   const [modelTab, setModelTab] = useState("frontier");
 
   const frontierModels = [
-    { name: "DeepSeek V4-Pro", params: "1.6T (49B active)", type: "MoE", vram: "32GB+", swe: 80.6, swePro: 58.6, lcb: 93.5, context: "1M", license: "MIT" },
-    { name: "MiniMax M3", params: "~500B MoE", type: "MoE", vram: "32GB+", swe: 80.5, swePro: 59.0, lcb: 88, context: "1M", license: "Custom" },
-    { name: "GLM-5.2", params: "~750B (40B active)", type: "MoE", vram: "24GB+", swe: 79, swePro: 62.1, lcb: 89, context: "128K", license: "MIT" },
-    { name: "Kimi K2.6", params: "~1T (32B active)", type: "MoE", vram: "24GB+", swe: 78, swePro: 58.6, lcb: 88, context: "256K", license: "Modified MIT" },
-    { name: "Qwen 3.5 397B", params: "397B (17B active)", type: "MoE", vram: "24GB+", swe: 77, swePro: 55, lcb: 83.6, context: "256K", license: "Apache 2.0" },
+    { name: "DeepSeek V4-Pro", params: "1.6T (49B active)", type: "MoE", vram: "~800GB", hw: "Cloud / cluster", swe: 80.6, context: "1M", license: "MIT" },
+    { name: "MiniMax M3", params: "428B (23B active)", type: "MoE", vram: "~230GB", hw: "Multi-GPU server", swe: 80.5, context: "1M", license: "Custom" },
+    { name: "Kimi K2.6", params: "~1.1T (32B active)", type: "MoE", vram: "~560GB", hw: "Cluster", swe: 80.2, context: "256K", license: "Modified MIT" },
+    { name: "Qwen3.5 397B", params: "397B (17B active)", type: "MoE", vram: "~210GB", hw: "Multi-GPU server", swe: 80.4, context: "256K", license: "Apache 2.0" },
+    { name: "GLM-5.2", params: "744B (40B active)", type: "MoE", vram: "~372GB", hw: "4x H200", swe: 79, context: "1M", license: "MIT" },
   ];
 
   const localModels = [
-    { name: "Qwen 3.6 27B", params: "27B dense", type: "Dense", vram: "16GB", swe: 77.2, swePro: 48, lcb: 78, context: "256K", license: "Apache 2.0", pick: true },
-    { name: "Qwen3-Coder-Next", params: "80B (3B active)", type: "MoE", vram: "16GB", swe: 70.6, swePro: 44.3, lcb: 76, context: "256K", license: "Apache 2.0", pick: true },
-    { name: "Devstral Small 2", params: "24B", type: "Dense", vram: "16GB", swe: 68, swePro: 42, lcb: 72, context: "256K", license: "Apache 2.0" },
-    { name: "Gemma 4 26B", params: "26B (3.8B active)", type: "MoE", vram: "16GB", swe: 65, swePro: 38, lcb: 77.1, context: "128K", license: "Apache 2.0" },
-    { name: "Mistral Small 4", params: "119B (6.5B active)", type: "MoE", vram: "16GB", swe: 60, swePro: 33, lcb: 68, context: "256K", license: "Apache 2.0" },
-    { name: "gpt-oss 120B", params: "117B (5.1B active)", type: "MoE", vram: "16GB", swe: 58, swePro: 32, lcb: 66, context: "128K", license: "Apache 2.0" },
-    { name: "GLM-4.7 Flash", params: "30B (3B active)", type: "MoE", vram: "16GB", swe: 55, swePro: 30, lcb: 65, context: "128K", license: "Apache 2.0" },
-    { name: "Phi-5 Medium", params: "14B", type: "Dense", vram: "12GB", swe: 52, swePro: 28, lcb: 62, context: "128K", license: "MIT" },
+    { name: "Qwen 3.6 27B", params: "27B dense", type: "Dense", vram: "~17GB", hw: "24GB GPU", swe: 77.2, context: "256K", license: "Apache 2.0", pick: true },
+    { name: "Devstral Small 2", params: "24B dense", type: "Dense", vram: "~13GB", hw: "16GB GPU", swe: 68, context: "256K", license: "Apache 2.0" },
+    { name: "Nemotron 3 Nano", params: "30B (3B active)", type: "MoE", vram: "~18GB", hw: "16-24GB GPU", swe: 38.8, context: "128K", license: "NVIDIA Open" },
+    { name: "Qwen 3.5 9B", params: "9B dense", type: "Dense", vram: "~7GB", hw: "12GB GPU", swe: 34, context: "128K", license: "Apache 2.0" },
+    { name: "Qwen3-Coder-Next", params: "80B (3B active)", type: "MoE", vram: "~46GB", hw: "48GB+ / 64GB Mac", swe: 71.3, context: "256K", license: "Apache 2.0" },
+    { name: "Devstral 2", params: "123B dense", type: "Dense", vram: "~62GB", hw: "96GB card", swe: 72.2, context: "256K", license: "Apache 2.0" },
+    { name: "gpt-oss 120B", params: "117B (5.1B active)", type: "MoE", vram: "~64GB", hw: "80GB GPU / 64GB unified", swe: 58, context: "128K", license: "Apache 2.0" },
+    { name: "Nemotron 3 Super", params: "120B (12B active)", type: "MoE", vram: "~60GB", hw: "96GB card", swe: 60.5, context: "128K", license: "NVIDIA Open" },
   ];
 
   const models = modelTab === "frontier" ? frontierModels : localModels;
@@ -576,8 +576,8 @@ export default function App() {
             <span className="text-accent italic">The Gap Has Never Been Smaller</span>
           </h1>
           <p className="text-xl text-muted max-w-2xl mb-8">
-            Open-weight models now lag frontier AI by just 4 months. DeepSeek V4, Qwen 3.6, and Kimi K2.6
-            hit 80%+ on SWE-bench, at just 1–5% of the cost.
+            Open-weight models now trail the frontier by months, not years. DeepSeek V4-Pro, MiniMax M3, and Kimi K2.6
+            all top 80% on SWE-bench Verified. The catch is the hardware to run them.
           </p>
           <div className="flex flex-wrap gap-4">
             <button onClick={() => document.getElementById("models")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-accent hover:bg-accentdark text-white font-semibold rounded-lg transition-colors flex items-center gap-2 border-none cursor-pointer">Explore Models <ArrowRight className="w-4 h-4" /></button>
@@ -606,7 +606,7 @@ export default function App() {
 
       {/* ── SOTA Gap ── */}
       <Section id="gap">
-        <SectionTitle eyebrow="The Big Picture" title="Open vs Closed: How Close Are We?" subtitle="Visual comparison across key benchmarks. Green = best open-weight, blue = frontier closed." />
+        <SectionTitle eyebrow="The Big Picture" title="Open vs Closed: How Close Are We?" subtitle="Best open-weight (red) against the top closed model (navy) on two coding benchmarks." />
         <div className="grid md:grid-cols-2 gap-8">
           <Card highlight>
             <h3 className="font-bold mb-1">SWE-bench Verified</h3>
@@ -615,7 +615,7 @@ export default function App() {
               <GapBar label="DeepSeek V4-Pro (open)" open={80.6} closed={88.6} />
               <GapBar label="MiniMax M3 (open)" open={80.5} closed={88.6} />
               <GapBar label="Qwen 3.6 27B (local 16GB)" open={77.2} closed={88.6} />
-              <GapBar label="Qwen3-Coder-Next (3B active)" open={70.6} closed={88.6} />
+              <GapBar label="Qwen3-Coder-Next (3B active)" open={71.3} closed={88.6} />
             </div>
             <p className="text-xs text-faint mt-3">Closed ref: Claude Opus 4.8 = 88.6%</p>
           </Card>
@@ -640,11 +640,15 @@ export default function App() {
 
       {/* ── Models ── */}
       <Section id="models" className="bg-paper2">
-        <SectionTitle eyebrow="June 2026 Leaderboard" title="Best Open-Weight Models" subtitle="Benchmarks shifted from MMLU/HumanEval (saturated) to SWE-bench and LiveCodeBench." />
-        <div className="flex gap-2 mb-8">
-          {[["frontier","Frontier Open Models"],["local","Best for Local HW"]].map(([k,l]) => (
+        <SectionTitle eyebrow="June 2026 Leaderboard" title="Best Open-Weight Models" subtitle="SWE-bench Verified scores and the real memory each model needs. VRAM is set by total parameters, not active ones." />
+        <div className="flex gap-2 mb-6">
+          {[["frontier","Frontier (server-class)"],["local","Runs on one machine"]].map(([k,l]) => (
             <button key={k} onClick={() => setModelTab(k)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${modelTab === k ? 'bg-accent text-white' : 'bg-white text-muted hover:text-ink'}`}>{l}</button>
           ))}
+        </div>
+        <div className="mb-8 p-4 bg-navysoft border border-navy/30 rounded-lg">
+          <p className="text-navy font-medium">How to read the VRAM column</p>
+          <p className="text-body text-sm mt-1">Memory is set by total parameters, not active ones. A mixture-of-experts model only computes with a few experts per token (the "active" figure), but every expert's weights still have to sit in memory. Rule of thumb at 4-bit: about 0.5 to 0.6 GB per billion total parameters, plus KV cache that grows with context. So a 1.6T model needs roughly 800GB no matter that only 49B are active.</p>
         </div>
         <div className="space-y-4">
           {models.map((m, i) => (
@@ -654,22 +658,20 @@ export default function App() {
                   <div className="flex items-center gap-2 flex-wrap"><h3 className="text-lg font-bold text-ink">{m.name}</h3>{m.pick && <Badge variant="success">Top Pick</Badge>}</div>
                   <div className="flex gap-1.5 mt-1 flex-wrap"><Badge>{m.params}</Badge><Badge variant={m.type==="MoE"?"info":"default"}>{m.type}</Badge><Badge variant="purple">{m.license}</Badge></div>
                 </div>
-                <div className="lg:w-3/4 grid grid-cols-2 md:grid-cols-5 gap-3">
+                <div className="lg:w-3/4 grid grid-cols-2 md:grid-cols-4 gap-3">
                   <div><p className="text-xs text-faint uppercase">VRAM (Q4)</p><p className="text-sm font-medium text-ink">{m.vram}</p></div>
-                  <div><p className="text-xs text-faint uppercase">Context</p><p className="text-sm font-medium text-ink">{m.context}</p></div>
+                  <div><p className="text-xs text-faint uppercase">Runs on</p><p className="text-sm font-medium text-ink">{m.hw}</p></div>
                   <div><p className="text-xs text-faint uppercase">SWE-bench ✓</p><p className="text-sm font-medium text-accent">{m.swe}%</p></div>
-                  <div><p className="text-xs text-faint uppercase">SWE Pro</p><p className="text-sm font-medium text-navy">{m.swePro}%</p></div>
-                  <div><p className="text-xs text-faint uppercase">LiveCodeBench</p><p className="text-sm font-medium text-ink">{m.lcb}%</p></div>
+                  <div><p className="text-xs text-faint uppercase">Context</p><p className="text-sm font-medium text-ink">{m.context}</p></div>
                 </div>
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-4">
-                <ProgressBar value={m.swe} label="SWE-bench Verified (Opus 4.8 = 88.6%)" color={m.swe>=77?"emerald":m.swe>=65?"cyan":"amber"} />
-                <ProgressBar value={m.lcb} label="LiveCodeBench" color={m.lcb>=85?"emerald":m.lcb>=70?"cyan":"amber"} />
+              <div className="mt-4">
+                <ProgressBar value={m.swe} label="SWE-bench Verified (Opus 4.8 = 88.6%)" color={m.swe>=77?"emerald":m.swe>=60?"cyan":"amber"} />
               </div>
             </Card>
           ))}
         </div>
-        <div className="mt-8 p-4 bg-goldsoft border border-gold/30 rounded-lg"><p className="text-gold font-medium">⚠️ Benchmark Caveat</p><p className="text-body text-sm mt-1">Many scores are vendor-reported. SWE-bench Verified has documented contamination. Independent evaluators (NIST CAISI, LM Arena) consistently show wider gaps. Treat single-benchmark claims as upper bounds.</p></div>
+        <div className="mt-8 p-4 bg-goldsoft border border-gold/30 rounded-lg"><p className="text-gold font-medium">⚠️ Benchmark Caveat</p><p className="text-body text-sm mt-1">Many scores are vendor-reported. SWE-bench Verified has documented contamination. Independent evaluators (NIST CAISI, LM Arena) consistently show wider gaps. Treat single-benchmark claims as upper bounds. Specs and SWE-bench scores verified June 2026 against model cards and public leaderboards; VRAM is computed from total parameters at 4-bit.</p></div>
       </Section>
 
       {/* ── Tutorial (Step by Step) ── */}
@@ -703,6 +705,10 @@ export default function App() {
             </Card>
           </div>
         </div>
+        <div className="mt-8 p-4 bg-paper2 border border-rule rounded-lg">
+          <p className="text-ink font-medium">Ollama vs llama.cpp</p>
+          <p className="text-body text-sm mt-1">Ollama is the easy on-ramp, and it is built on llama.cpp. For large models, multi-GPU rigs, or maximum throughput, run llama.cpp or vLLM directly. Ollama's defaults (like the 4K context above) are tuned for a simple first run, not speed.</p>
+        </div>
       </Section>
 
       {/* ── Your Setup (Interactive) ── */}
@@ -722,7 +728,7 @@ export default function App() {
       <footer className="border-t border-rule py-8">
         <div className="max-w-6xl mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2"><Cpu className="w-5 h-5 text-accent" /><span className="font-bold text-ink">Local AI Guide</span><span className="text-faint text-sm">• June 2026</span></div>
-          <p className="text-faint text-sm text-center md:text-right">Sources: Epoch AI, NIST CAISI, LM Arena, vendor benchmarks.</p>
+          <p className="text-faint text-sm text-center md:text-right">Sources: model cards, llm-stats, Artificial Analysis, Epoch AI, NIST CAISI, LM Arena. Specs verified June 2026.</p>
         </div>
       </footer>
     </div>
