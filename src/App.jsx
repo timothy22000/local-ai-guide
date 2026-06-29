@@ -114,11 +114,11 @@ const GapBar = ({ label, open, closed }) => (
 /* ─── Navigation ─── */
 
 const NAV_ITEMS = [
-  { id: "gap", label: "SOTA Gap" },
-  { id: "models", label: "Models" },
   { id: "tutorial", label: "Tutorial" },
   { id: "setup", label: "Setup" },
   { id: "your-setup", label: "Your Setup" },
+  { id: "gap", label: "Benchmarks" },
+  { id: "models", label: "Models" },
 ];
 
 function Nav() {
@@ -247,7 +247,7 @@ function HardwareAnalyzer() {
   const showCpuWarning = gpu && gpu.id === "none";
 
   return (
-    <Section id="your-setup">
+    <Section id="your-setup" className="bg-paper2">
       <SectionTitle
         eyebrow="Interactive Tool"
         title="Analyze Your Setup"
@@ -432,7 +432,7 @@ export ANTHROPIC_DEFAULT_OPUS_MODEL="${bestModel ? bestModel.name.toLowerCase().
           {/* Upgrade suggestion */}
           {effectiveVram < 16 && (
             <div className="mt-6 p-4 bg-goldsoft border border-gold/30 rounded-lg">
-              <p className="text-gold font-medium">💡 Upgrade Suggestion</p>
+              <p className="text-gold font-medium">Upgrade suggestion</p>
               <p className="text-body text-sm mt-1">
                 With {Math.floor(effectiveVram)}GB effective VRAM, you're limited to smaller models. A 24GB card like a used RTX 3090 would unlock Qwen 3.6 27B (77.2% SWE-bench), the best local coder available. A 16GB card is the practical sweet spot for a new buy.
               </p>
@@ -619,107 +619,17 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 md:px-8 relative">
           <Badge variant="success">Updated June 26, 2026</Badge>
           <h1 className="text-4xl md:text-6xl font-extrabold font-display mt-4 mb-6 leading-tight tracking-tight">
-            Run AI Models Locally<br />
-            <span className="text-accent italic">The Gap Has Never Been Smaller</span>
+            Run AI models locally
           </h1>
           <p className="text-xl text-muted max-w-2xl mb-8">
-            Open-weight models now trail the frontier by months, not years. DeepSeek V4-Pro, MiniMax M3, and Kimi K2.6
-            all top 80% on SWE-bench Verified. The catch is the hardware to run them.
+            A practical guide to running open-weight models on your own machine: install Ollama, point Claude Code at it, and check what your hardware can actually run. The benchmark numbers are further down.
           </p>
           <div className="flex flex-wrap gap-4">
-            <button onClick={() => document.getElementById("models")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-accent hover:bg-accentdark text-white font-semibold rounded-lg transition-colors flex items-center gap-2 border-none cursor-pointer">Explore Models <ArrowRight className="w-4 h-4" /></button>
-            <button onClick={() => document.getElementById("your-setup")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-white hover:bg-track text-ink font-semibold rounded-lg transition-colors border border-rule cursor-pointer">Analyze Your Setup</button>
+            <button onClick={() => document.getElementById("tutorial")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-accent hover:bg-accentdark text-white font-semibold rounded-lg transition-colors flex items-center gap-2 border-none cursor-pointer">Start the setup <ArrowRight className="w-4 h-4" /></button>
+            <button onClick={() => document.getElementById("your-setup")?.scrollIntoView({ behavior: "smooth" })} className="px-6 py-3 bg-white hover:bg-track text-ink font-semibold rounded-lg transition-colors border border-rule cursor-pointer">Check what I can run</button>
           </div>
         </div>
       </header>
-
-      {/* ── Stats bar ── */}
-      <Section className="border-y border-rule !py-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {[
-            { value: "~4 mo", label: "Open vs Frontier Gap", sub: "Epoch AI, May 2026" },
-            { value: "80.6%", label: "Best Open SWE-bench", sub: "DeepSeek V4-Pro" },
-            { value: "62.1%", label: "Best Open SWE-bench Pro", sub: "GLM-5.2" },
-            { value: "77.2%", label: "Best Local Coder", sub: "Qwen 3.6 27B" },
-          ].map((s, i) => (
-            <div key={i} className="text-center">
-              <p className="text-3xl md:text-4xl font-bold font-display text-accent">{s.value}</p>
-              <p className="text-sm text-body mt-1">{s.label}</p>
-              <p className="text-xs text-faint">{s.sub}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* ── SOTA Gap ── */}
-      <Section id="gap">
-        <SectionTitle eyebrow="The Big Picture" title="Open vs Closed: How Close Are We?" subtitle="Best open-weight (red) against the top closed model (navy) on two coding benchmarks." />
-        <div className="grid md:grid-cols-2 gap-8">
-          <Card highlight>
-            <h3 className="font-bold mb-1">SWE-bench Verified</h3>
-            <p className="text-xs text-faint mb-4">Real-world GitHub issue resolution</p>
-            <div className="space-y-3">
-              <GapBar label="DeepSeek V4-Pro (open)" open={80.6} closed={88.6} />
-              <GapBar label="MiniMax M3 (open)" open={80.5} closed={88.6} />
-              <GapBar label="Qwen 3.6 27B (local 16GB)" open={77.2} closed={88.6} />
-              <GapBar label="Qwen3-Coder-Next (3B active)" open={71.3} closed={88.6} />
-            </div>
-            <p className="text-xs text-faint mt-3">Closed ref: Claude Opus 4.8 = 88.6%</p>
-          </Card>
-          <Card highlight>
-            <h3 className="font-bold mb-1">SWE-bench Pro (Harder)</h3>
-            <p className="text-xs text-faint mb-4">Independent, contamination-resistant</p>
-            <div className="space-y-3">
-              <GapBar label="GLM-5.2 (open)" open={62.1} closed={69.2} />
-              <GapBar label="MiniMax M3 (open)" open={59.0} closed={69.2} />
-              <GapBar label="Kimi K2.6 (open)" open={58.6} closed={69.2} />
-              <GapBar label="DeepSeek V4-Pro (open)" open={58.6} closed={69.2} />
-            </div>
-            <p className="text-xs text-faint mt-3">Closed ref: Claude Opus 4.8 = 69.2%</p>
-          </Card>
-        </div>
-        <div className="mt-8 grid md:grid-cols-3 gap-6">
-          <Card><Clock className="w-6 h-6 text-navy mb-3" /><h3 className="font-bold text-ink mb-1">4-Month Lag</h3><p className="text-sm text-muted">Per Epoch AI (May 2026), open-weight models trail the frontier by ~4 months, the smallest gap ever measured.</p></Card>
-          <Card><TrendingUp className="w-6 h-6 text-accent mb-3" /><h3 className="font-bold text-ink mb-1">85–95% as Good</h3><p className="text-sm text-muted">For most coding and reasoning tasks, at 1–5% of the cost of frontier APIs.</p></Card>
-          <Card><AlertTriangle className="w-6 h-6 text-gold mb-3" /><h3 className="font-bold text-ink mb-1">Real Gap Remains</h3><p className="text-sm text-muted">On independent evals (NIST CAISI, LM Arena), agentic, abstract reasoning, and cyber tasks still strongly favor proprietary models.</p></Card>
-        </div>
-      </Section>
-
-      {/* ── Models ── */}
-      <Section id="models" className="bg-paper2">
-        <SectionTitle eyebrow="June 2026 Leaderboard" title="Best Open-Weight Models" subtitle="SWE-bench Verified scores and the real memory each model needs. VRAM is set by total parameters, not active ones." />
-        <div className="flex gap-2 mb-6">
-          {[["frontier","Frontier (server-class)"],["local","Runs on one machine"]].map(([k,l]) => (
-            <button key={k} onClick={() => setModelTab(k)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${modelTab === k ? 'bg-accent text-white' : 'bg-white text-muted hover:text-ink'}`}>{l}</button>
-          ))}
-        </div>
-        <div className="mb-8 p-4 bg-navysoft border border-navy/30 rounded-lg">
-          <p className="text-navy font-medium">How to read the VRAM column</p>
-          <p className="text-body text-sm mt-1">Memory is set by total parameters, not active ones. A mixture-of-experts model only computes with a few experts per token (the "active" figure), but every expert's weights still have to sit in memory. Rule of thumb at 4-bit: about 0.5 to 0.6 GB per billion total parameters, plus KV cache that grows with context. So a 1.6T model needs roughly 800GB no matter that only 49B are active.</p>
-        </div>
-        <div className="space-y-4">
-          {models.map((m, i) => (
-            <Card key={i} highlight={m.pick || m.swe >= 80}>
-              <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                <div className="lg:w-1/4">
-                  <div className="flex items-center gap-2 flex-wrap"><h3 className="text-lg font-bold text-ink">{m.name}</h3>{m.pick && <Badge variant="success">Top Pick</Badge>}</div>
-                  <div className="flex gap-1.5 mt-1 flex-wrap"><Badge>{m.params}</Badge><Badge variant={m.type==="MoE"?"info":"default"}>{m.type}</Badge><Badge variant="purple">{m.license}</Badge></div>
-                </div>
-                <div className="lg:w-3/4 grid grid-cols-2 md:grid-cols-4 gap-3">
-                  <div><p className="text-xs text-faint uppercase">VRAM (Q4)</p><p className="text-sm font-medium text-ink">{m.vram}</p></div>
-                  <div><p className="text-xs text-faint uppercase">Runs on</p><p className="text-sm font-medium text-ink">{m.hw}</p></div>
-                  <div><p className="text-xs text-faint uppercase">SWE-bench ✓</p><p className="text-sm font-medium text-accent">{m.swe}%</p></div>
-                  <div><p className="text-xs text-faint uppercase">Context</p><p className="text-sm font-medium text-ink">{m.context}</p></div>
-                </div>
-              </div>
-              <div className="mt-4">
-                <ProgressBar value={m.swe} label="SWE-bench Verified (Opus 4.8 = 88.6%)" color={m.swe>=77?"emerald":m.swe>=60?"cyan":"amber"} />
-              </div>
-            </Card>
-          ))}
-        </div>
-        <div className="mt-8 p-4 bg-goldsoft border border-gold/30 rounded-lg"><p className="text-gold font-medium">⚠️ Benchmark Caveat</p><p className="text-body text-sm mt-1">Many scores are vendor-reported. SWE-bench Verified has documented contamination. Independent evaluators (NIST CAISI, LM Arena) consistently show wider gaps. Treat single-benchmark claims as upper bounds. Specs and SWE-bench scores verified June 2026 against model cards and public leaderboards; VRAM is computed from total parameters at 4-bit.</p></div>
-      </Section>
 
       {/* ── Tutorial (Step by Step) ── */}
       <TutorialSection />
@@ -761,11 +671,99 @@ export default function App() {
       {/* ── Your Setup (Interactive) ── */}
       <HardwareAnalyzer />
 
+      {/* ── Stats bar ── */}
+      <Section className="border-y border-rule !py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            { value: "~4 mo", label: "Open vs Frontier Gap", sub: "Epoch AI, May 2026" },
+            { value: "80.6%", label: "Best Open SWE-bench", sub: "DeepSeek V4-Pro" },
+            { value: "62.1%", label: "Best Open SWE-bench Pro", sub: "GLM-5.2" },
+            { value: "77.2%", label: "Best Local Coder", sub: "Qwen 3.6 27B" },
+          ].map((s, i) => (
+            <div key={i} className="text-center">
+              <p className="text-3xl md:text-4xl font-bold font-display text-accent">{s.value}</p>
+              <p className="text-sm text-body mt-1">{s.label}</p>
+              <p className="text-xs text-faint">{s.sub}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ── SOTA Gap ── */}
+      <Section id="gap">
+        <SectionTitle eyebrow="Benchmarks" title="Open vs closed on coding benchmarks" subtitle="Best open-weight (red) against the top closed model (navy) on two coding benchmarks." />
+        <div className="grid md:grid-cols-2 gap-8">
+          <Card highlight>
+            <h3 className="font-bold mb-1">SWE-bench Verified</h3>
+            <p className="text-xs text-faint mb-4">Real-world GitHub issue resolution</p>
+            <div className="space-y-3">
+              <GapBar label="DeepSeek V4-Pro (open)" open={80.6} closed={88.6} />
+              <GapBar label="MiniMax M3 (open)" open={80.5} closed={88.6} />
+              <GapBar label="Qwen 3.6 27B (local 16GB)" open={77.2} closed={88.6} />
+              <GapBar label="Qwen3-Coder-Next (3B active)" open={71.3} closed={88.6} />
+            </div>
+            <p className="text-xs text-faint mt-3">Closed ref: Claude Opus 4.8 = 88.6%</p>
+          </Card>
+          <Card highlight>
+            <h3 className="font-bold mb-1">SWE-bench Pro (Harder)</h3>
+            <p className="text-xs text-faint mb-4">Independent, contamination-resistant</p>
+            <div className="space-y-3">
+              <GapBar label="GLM-5.2 (open)" open={62.1} closed={69.2} />
+              <GapBar label="MiniMax M3 (open)" open={59.0} closed={69.2} />
+              <GapBar label="Kimi K2.6 (open)" open={58.6} closed={69.2} />
+              <GapBar label="DeepSeek V4-Pro (open)" open={58.6} closed={69.2} />
+            </div>
+            <p className="text-xs text-faint mt-3">Closed ref: Claude Opus 4.8 = 69.2%</p>
+          </Card>
+        </div>
+        <div className="mt-8 grid md:grid-cols-3 gap-6">
+          <Card><Clock className="w-6 h-6 text-navy mb-3" /><h3 className="font-bold text-ink mb-1">4-Month Lag</h3><p className="text-sm text-muted">Per Epoch AI (May 2026), open-weight models trail the frontier by ~4 months, the smallest gap ever measured.</p></Card>
+          <Card><TrendingUp className="w-6 h-6 text-accent mb-3" /><h3 className="font-bold text-ink mb-1">85–95% as Good</h3><p className="text-sm text-muted">For most coding and reasoning tasks, at 1–5% of the cost of frontier APIs.</p></Card>
+          <Card><AlertTriangle className="w-6 h-6 text-gold mb-3" /><h3 className="font-bold text-ink mb-1">Real Gap Remains</h3><p className="text-sm text-muted">On independent evals (NIST CAISI, LM Arena), agentic, abstract reasoning, and cyber tasks still strongly favor proprietary models.</p></Card>
+        </div>
+      </Section>
+
+      {/* ── Models ── */}
+      <Section id="models" className="bg-paper2">
+        <SectionTitle eyebrow="June 2026" title="Open-weight model leaderboard" subtitle="SWE-bench Verified scores and the real memory each model needs. VRAM is set by total parameters, not active ones." />
+        <div className="flex gap-2 mb-6">
+          {[["frontier","Frontier (server-class)"],["local","Runs on one machine"]].map(([k,l]) => (
+            <button key={k} onClick={() => setModelTab(k)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors border-none cursor-pointer ${modelTab === k ? 'bg-accent text-white' : 'bg-white text-muted hover:text-ink'}`}>{l}</button>
+          ))}
+        </div>
+        <div className="mb-8 p-4 bg-navysoft border border-navy/30 rounded-lg">
+          <p className="text-navy font-medium">How to read the VRAM column</p>
+          <p className="text-body text-sm mt-1">Memory is set by total parameters, not active ones. A mixture-of-experts model only computes with a few experts per token (the "active" figure), but every expert's weights still have to sit in memory. Rule of thumb at 4-bit: about 0.5 to 0.6 GB per billion total parameters, plus KV cache that grows with context. So a 1.6T model needs roughly 800GB no matter that only 49B are active.</p>
+        </div>
+        <div className="space-y-4">
+          {models.map((m, i) => (
+            <Card key={i} highlight={m.pick || m.swe >= 80}>
+              <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                <div className="lg:w-1/4">
+                  <div className="flex items-center gap-2 flex-wrap"><h3 className="text-lg font-bold text-ink">{m.name}</h3>{m.pick && <Badge variant="success">Top Pick</Badge>}</div>
+                  <div className="flex gap-1.5 mt-1 flex-wrap"><Badge>{m.params}</Badge><Badge variant={m.type==="MoE"?"info":"default"}>{m.type}</Badge><Badge variant="purple">{m.license}</Badge></div>
+                </div>
+                <div className="lg:w-3/4 grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div><p className="text-xs text-faint uppercase">VRAM (Q4)</p><p className="text-sm font-medium text-ink">{m.vram}</p></div>
+                  <div><p className="text-xs text-faint uppercase">Runs on</p><p className="text-sm font-medium text-ink">{m.hw}</p></div>
+                  <div><p className="text-xs text-faint uppercase">SWE-bench ✓</p><p className="text-sm font-medium text-accent">{m.swe}%</p></div>
+                  <div><p className="text-xs text-faint uppercase">Context</p><p className="text-sm font-medium text-ink">{m.context}</p></div>
+                </div>
+              </div>
+              <div className="mt-4">
+                <ProgressBar value={m.swe} label="SWE-bench Verified (Opus 4.8 = 88.6%)" color={m.swe>=77?"emerald":m.swe>=60?"cyan":"amber"} />
+              </div>
+            </Card>
+          ))}
+        </div>
+        <div className="mt-8 p-4 bg-goldsoft border border-gold/30 rounded-lg"><p className="text-gold font-medium">Benchmark caveat</p><p className="text-body text-sm mt-1">Many scores are vendor-reported. SWE-bench Verified has documented contamination. Independent evaluators (NIST CAISI, LM Arena) consistently show wider gaps. Treat single-benchmark claims as upper bounds. Specs and SWE-bench scores verified June 2026 against model cards and public leaderboards; VRAM is computed from total parameters at 4-bit.</p></div>
+      </Section>
+
       {/* ── Footer ── */}
       <Section className="!py-12">
         <div className="text-center max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold font-display mb-6">The Best Time to Go Local</h2>
-          <p className="text-muted text-lg mb-8">Open models at 85–95% of frontier quality. MoE architectures that run 70B-class models on a laptop. Claude Code that connects natively to Ollama.</p>
+          <h2 className="text-3xl md:text-4xl font-bold font-display mb-6">Get the tools</h2>
+          <p className="text-muted text-lg mb-8">Ollama is the quickest way to start, and it powers the setup above. LM Studio adds a GUI. For large models or multi-GPU, run llama.cpp or vLLM directly.</p>
           <div className="flex flex-wrap justify-center gap-4">
             <a href="https://ollama.com" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-accent hover:bg-accentdark text-white font-semibold rounded-lg transition-colors inline-flex items-center gap-2 no-underline">Download Ollama <ExternalLink className="w-4 h-4" /></a>
             <a href="https://lmstudio.ai" target="_blank" rel="noopener noreferrer" className="px-6 py-3 bg-white hover:bg-track text-ink font-semibold rounded-lg transition-colors border border-rule inline-flex items-center gap-2 no-underline">Try LM Studio <ExternalLink className="w-4 h-4" /></a>
