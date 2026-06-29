@@ -169,46 +169,55 @@ function Nav() {
 /* ─── Hardware Analyzer ─── */
 
 const GPU_DB = [
-  { id: "5090",     name: "RTX 5090",           vram: 32, arch: "Blackwell",  toks8b: 185, toks30b: 234, platform: "pc" },
-  { id: "5080",     name: "RTX 5080",           vram: 16, arch: "Blackwell",  toks8b: 145, toks30b: 120, platform: "pc" },
-  { id: "5070ti",   name: "RTX 5070 Ti",        vram: 16, arch: "Blackwell",  toks8b: 120, toks30b: 95,  platform: "pc" },
-  { id: "5060ti",   name: "RTX 5060 Ti 16GB",   vram: 16, arch: "Blackwell",  toks8b: 90,  toks30b: 72,  platform: "pc" },
-  { id: "4090",     name: "RTX 4090",           vram: 24, arch: "Ada",        toks8b: 128, toks30b: 105, platform: "pc" },
-  { id: "4090u",    name: "RTX 4090 (used)",    vram: 24, arch: "Ada",        toks8b: 128, toks30b: 105, platform: "pc" },
-  { id: "3090u",    name: "RTX 3090 (used)",    vram: 24, arch: "Ampere",     toks8b: 112, toks30b: 85,  platform: "pc" },
-  { id: "4060ti",   name: "RTX 4060 Ti 16GB",   vram: 16, arch: "Ada",        toks8b: 72,  toks30b: 58,  platform: "pc" },
-  { id: "3060",     name: "RTX 3060 12GB",      vram: 12, arch: "Ampere",     toks8b: 55,  toks30b: 0,  platform: "pc" },
-  { id: "r9700",    name: "AMD R9700 AI PRO",   vram: 32, arch: "RDNA 4",     toks8b: 95,  toks30b: 78, platform: "pc" },
-  { id: "b580",     name: "Intel Arc B580",     vram: 12, arch: "Battlemage",  toks8b: 62,  toks30b: 0,  platform: "pc" },
-  { id: "1070ti",   name: "GTX 1070 Ti",        vram: 8,  arch: "Pascal",     toks8b: 18,  toks30b: 0,  platform: "pc" },
-  { id: "1080ti",   name: "GTX 1080 Ti",        vram: 11, arch: "Pascal",     toks8b: 25,  toks30b: 0,  platform: "pc" },
-  { id: "m5max128", name: "M5 Max (128GB)",     vram: 128,arch: "M5",         toks8b: 230, toks30b: 145, platform: "mac" },
-  { id: "m4max64",  name: "M4 Max (64GB)",      vram: 64, arch: "M4",         toks8b: 62,  toks30b: 48, platform: "mac" },
-  { id: "m4max128", name: "M4 Max (128GB)",     vram: 128,arch: "M4",         toks8b: 62,  toks30b: 48, platform: "mac" },
-  { id: "m3max64",  name: "M3 Max (64GB)",      vram: 64, arch: "M3",         toks8b: 50,  toks30b: 38, platform: "mac" },
-  { id: "m2max64",  name: "M2 Max (64GB)",      vram: 64, arch: "M2",         toks8b: 55,  toks30b: 42, platform: "mac" },
-  { id: "m2max32",  name: "M2 Max (32GB)",      vram: 32, arch: "M2",         toks8b: 55,  toks30b: 40, platform: "mac" },
-  { id: "m2pro32",  name: "M2 Pro (32GB)",      vram: 32, arch: "M2",         toks8b: 40,  toks30b: 28, platform: "mac" },
-  { id: "m1max64",  name: "M1 Max (64GB)",      vram: 64, arch: "M1",         toks8b: 35,  toks30b: 25, platform: "mac" },
-  { id: "none",     name: "No dedicated GPU",   vram: 0,  arch: "CPU",        toks8b: 2,   toks30b: 0,    platform: "any" },
+  { id: "5090",     name: "RTX 5090",           vram: 32, arch: "Blackwell",   bw: 1792, platform: "pc" },
+  { id: "5080",     name: "RTX 5080",           vram: 16, arch: "Blackwell",   bw: 960,  platform: "pc" },
+  { id: "5070ti",   name: "RTX 5070 Ti",        vram: 16, arch: "Blackwell",   bw: 896,  platform: "pc" },
+  { id: "5060ti",   name: "RTX 5060 Ti 16GB",   vram: 16, arch: "Blackwell",   bw: 448,  platform: "pc" },
+  { id: "4090",     name: "RTX 4090",           vram: 24, arch: "Ada",         bw: 1008, platform: "pc" },
+  { id: "4090u",    name: "RTX 4090 (used)",    vram: 24, arch: "Ada",         bw: 1008, platform: "pc" },
+  { id: "3090u",    name: "RTX 3090 (used)",    vram: 24, arch: "Ampere",      bw: 936,  platform: "pc" },
+  { id: "4060ti",   name: "RTX 4060 Ti 16GB",   vram: 16, arch: "Ada",         bw: 288,  platform: "pc" },
+  { id: "3060",     name: "RTX 3060 12GB",      vram: 12, arch: "Ampere",      bw: 360,  platform: "pc" },
+  { id: "r9700",    name: "AMD R9700 AI PRO",   vram: 32, arch: "RDNA 4",      bw: 640,  platform: "pc" },
+  { id: "b580",     name: "Intel Arc B580",     vram: 12, arch: "Battlemage",  bw: 456,  platform: "pc" },
+  { id: "1070ti",   name: "GTX 1070 Ti",        vram: 8,  arch: "Pascal",      bw: 256,  platform: "pc" },
+  { id: "1080ti",   name: "GTX 1080 Ti",        vram: 11, arch: "Pascal",      bw: 484,  platform: "pc" },
+  { id: "m5max128", name: "M5 Max (128GB)",     vram: 128,arch: "M5",          bw: 614,  platform: "mac" },
+  { id: "m4max64",  name: "M4 Max (64GB)",      vram: 64, arch: "M4",          bw: 546,  platform: "mac" },
+  { id: "m4max128", name: "M4 Max (128GB)",     vram: 128,arch: "M4",          bw: 546,  platform: "mac" },
+  { id: "m3max64",  name: "M3 Max (64GB)",      vram: 64, arch: "M3",          bw: 400,  platform: "mac" },
+  { id: "m2max64",  name: "M2 Max (64GB)",      vram: 64, arch: "M2",          bw: 400,  platform: "mac" },
+  { id: "m2max32",  name: "M2 Max (32GB)",      vram: 32, arch: "M2",          bw: 400,  platform: "mac" },
+  { id: "m2pro32",  name: "M2 Pro (32GB)",      vram: 32, arch: "M2",          bw: 200,  platform: "mac" },
+  { id: "m1max64",  name: "M1 Max (64GB)",      vram: 64, arch: "M1",          bw: 400,  platform: "mac" },
+  { id: "none",     name: "No dedicated GPU",   vram: 0,  arch: "CPU",         bw: 50,   platform: "any" },
 ];
 
 const MODEL_DB = [
-  { name: "Qwen 3.6 27B",      vramReq: 17,  swe: 77.2, speed: "fast",      tier: "excellent", useCase: "Best local coder" },
-  { name: "Devstral Small 2",  vramReq: 13,  swe: 68,   speed: "fast",      tier: "great",     useCase: "Agentic coding, fits 16GB" },
-  { name: "Nemotron 3 Nano",   vramReq: 18,  swe: 38.8, speed: "very fast", tier: "good",      useCase: "Fast, low VRAM" },
-  { name: "Qwen 3.5 9B",       vramReq: 7,   swe: 34,   speed: "fastest",   tier: "decent",    useCase: "Runs on 12GB" },
-  { name: "Qwen 3.5 4B",       vramReq: 3,   swe: 20,   speed: "fastest",   tier: "entry",     useCase: "Edge / CPU-friendly" },
-  { name: "Qwen3-Coder-Next",  vramReq: 46,  swe: 71.3, speed: "fast",      tier: "excellent", useCase: "Needs 48GB+ or 64GB Mac" },
-  { name: "Devstral 2",        vramReq: 62,  swe: 72.2, speed: "medium",    tier: "great",     useCase: "Dense 123B, 96GB card" },
-  { name: "gpt-oss 120B",      vramReq: 64,  swe: 58,   speed: "fast",      tier: "good",      useCase: "80GB GPU / 64GB unified" },
-  { name: "Nemotron 3 Super",  vramReq: 60,  swe: 60.5, speed: "medium",    tier: "good",      useCase: "96GB card" },
-  { name: "Qwen3.5 397B",      vramReq: 210, swe: 80.4, speed: "slow",      tier: "excellent", useCase: "Multi-GPU server" },
-  { name: "MiniMax M3",        vramReq: 230, swe: 80.5, speed: "slow",      tier: "excellent", useCase: "Multi-GPU server" },
-  { name: "GLM-5.2",           vramReq: 372, swe: 79,   speed: "slow",      tier: "excellent", useCase: "Server (4x H200)" },
-  { name: "Kimi K2.6",         vramReq: 560, swe: 80.2, speed: "slow",      tier: "excellent", useCase: "Cluster" },
-  { name: "DeepSeek V4-Pro",   vramReq: 800, swe: 80.6, speed: "slow",      tier: "excellent", useCase: "Cloud / cluster" },
+  { name: "Qwen 3.6 27B",      vramReq: 17,  actGB: 17,   moe: false, swe: 77.2, tier: "excellent", useCase: "Best local coder" },
+  { name: "Devstral Small 2",  vramReq: 13,  actGB: 13,   moe: false, swe: 68,   tier: "great",     useCase: "Agentic coding, fits 16GB" },
+  { name: "Nemotron 3 Nano",   vramReq: 18,  actGB: 1.7,  moe: true,  swe: 38.8, tier: "good",      useCase: "Fast, low VRAM" },
+  { name: "Qwen 3.5 9B",       vramReq: 7,   actGB: 7,    moe: false, swe: 34,   tier: "decent",    useCase: "Runs on 12GB" },
+  { name: "Qwen 3.5 4B",       vramReq: 3,   actGB: 3,    moe: false, swe: 20,   tier: "entry",     useCase: "Edge / CPU-friendly" },
+  { name: "Qwen3-Coder-Next",  vramReq: 46,  actGB: 1.7,  moe: true,  swe: 71.3, tier: "excellent", useCase: "Needs 48GB+ or 64GB Mac" },
+  { name: "Devstral 2",        vramReq: 62,  actGB: 62,   moe: false, swe: 72.2, tier: "great",     useCase: "Dense 123B, 96GB card" },
+  { name: "gpt-oss 120B",      vramReq: 64,  actGB: 2.8,  moe: true,  swe: 58,   tier: "good",      useCase: "80GB GPU / 64GB unified" },
+  { name: "Nemotron 3 Super",  vramReq: 60,  actGB: 6.6,  moe: true,  swe: 60.5, tier: "good",      useCase: "96GB card" },
+  { name: "Qwen3.5 397B",      vramReq: 210, actGB: 9.4,  moe: true,  swe: 80.4, tier: "excellent", useCase: "Multi-GPU server" },
+  { name: "MiniMax M3",        vramReq: 230, actGB: 12.7, moe: true,  swe: 80.5, tier: "excellent", useCase: "Multi-GPU server" },
+  { name: "GLM-5.2",           vramReq: 372, actGB: 22,   moe: true,  swe: 79,   tier: "excellent", useCase: "Server (4x H200)" },
+  { name: "Kimi K2.6",         vramReq: 560, actGB: 17.6, moe: true,  swe: 80.2, tier: "excellent", useCase: "Cluster" },
+  { name: "DeepSeek V4-Pro",   vramReq: 800, actGB: 27,   moe: true,  swe: 80.6, tier: "excellent", useCase: "Cloud / cluster" },
 ];
+
+// Decoding is memory-bound: tok/s ~= bandwidth / bytes read per token.
+// Dense reads all weights; MoE reads active experts plus always-on layers (~20% of total).
+function estTps(bw, m) {
+  if (!bw || !m) return 0;
+  const perTokenGB = m.moe ? (m.actGB + 0.2 * m.vramReq) : m.vramReq;
+  const eff = m.moe ? 0.7 : 0.82;
+  return Math.round((eff * bw) / perTokenGB);
+}
 
 function HardwareAnalyzer() {
   const [platform, setPlatform] = useState("");
@@ -295,6 +304,7 @@ function HardwareAnalyzer() {
               <div className="p-3 bg-paper2 rounded-lg border border-rule">
                 <div className="flex justify-between text-sm"><span className="text-muted">Effective VRAM</span><span className="text-ink font-medium">{Math.floor(effectiveVram)}GB {gpu.platform === "mac" && "(75% of unified)"}</span></div>
                 <div className="flex justify-between text-sm mt-1"><span className="text-muted">Compatible models</span><span className="text-accent font-medium">{compatibleModels.length}</span></div>
+                <div className="flex justify-between text-sm mt-1"><span className="text-muted">Memory bandwidth</span><span className="text-ink font-medium">{gpu.bw} GB/s</span></div>
               </div>
             )}
           </div>
@@ -329,7 +339,7 @@ function HardwareAnalyzer() {
                 {bestModel && (
                   <div className="flex flex-wrap gap-3 mt-2">
                     <Badge variant="success">{bestModel.swe}% SWE-bench</Badge>
-                    <Badge variant="info">{bestModel.speed}</Badge>
+                    <Badge variant="info">~{estTps(gpu.bw, bestModel)} tok/s</Badge>
                     <Badge>{bestModel.useCase}</Badge>
                   </div>
                 )}
@@ -342,12 +352,12 @@ function HardwareAnalyzer() {
             <h3 className="font-bold text-ink mb-4">All Compatible Models ({compatibleModels.length})</h3>
             {compatibleModels.length > 0 ? (
               <DataTable
-                headers={["Model", "VRAM Needed", "SWE-bench", "Speed", "Quality", "Best For"]}
+                headers={["Model", "VRAM (Q4)", "SWE-bench", "Est. tok/s", "Quality", "Best For"]}
                 rows={compatibleModels.map((m, i) => [
                   <span className={i === 0 ? "text-accent font-medium" : ""}>{m.name} {i === 0 && "⭐"}</span>,
                   `${m.vramReq}GB`,
                   <span className="text-accent">{m.swe}%</span>,
-                  m.speed,
+                  <span className="text-navy font-medium">~{estTps(gpu.bw, m)}</span>,
                   <Badge variant={m.tier === "excellent" ? "success" : m.tier === "great" ? "info" : m.tier === "good" ? "warning" : "default"}>{m.tier}</Badge>,
                   m.useCase,
                 ])}
@@ -357,6 +367,12 @@ function HardwareAnalyzer() {
               <p className="text-muted text-sm">No models fit your current VRAM. Consider upgrading your GPU.</p>
             )}
           </Card>
+
+          {/* How the estimate works */}
+          <div className="mb-6 p-4 bg-navysoft border border-navy/30 rounded-lg">
+            <p className="text-navy font-medium">How the tok/s estimate works</p>
+            <p className="text-body text-sm mt-1">Decoding is memory-bound: each token reads the model weights from memory once, so tokens per second is roughly memory bandwidth divided by the bytes read per token. Dense models read every weight; a mixture-of-experts model reads only its active experts, which is why an 80B model with 3B active runs far faster than its size suggests. These are rough ceilings. Real throughput also depends on quantization, context length, and CPU/RAM offload, so for a tuned number (your exact RAM speed, quant, and offload) try <a href="https://runthisllm.com" target="_blank" rel="noopener noreferrer" className="text-accent underline">runthisllm.com</a>.</p>
+          </div>
 
           {/* Quick Setup */}
           <Card>
