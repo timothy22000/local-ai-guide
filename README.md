@@ -1,6 +1,6 @@
 # 🤖 Local AI Guide: June 2026
 
-An interactive guide to running AI models locally as a backup for ChatGPT, Claude, and Gemini. Covers model comparisons, GPU benchmarks, cost analysis, Claude Code integration, and a hardware analyzer.
+An interactive guide to running AI models locally as a backup for ChatGPT, Claude, and Gemini. Covers model comparisons and benchmarks, a Claude Code + Ollama setup tutorial, and a hardware analyzer.
 
 **[Live Demo →](https://timothy22000.github.io/local-ai-guide)**
 
@@ -8,8 +8,6 @@ An interactive guide to running AI models locally as a backup for ChatGPT, Claud
 
 - **SOTA Gap Analysis**: Visual comparison of open-weight vs frontier closed models
 - **Model Leaderboard**: June 2026 benchmarks (SWE-bench, LiveCodeBench) for 13+ models
-- **GPU Comparison**: Street prices during the 2026 DRAM shortage, with value ratings
-- **Cost Calculator**: Local vs cloud pricing with breakeven analysis
 - **Claude Code Setup**: Native Ollama v0.14+ integration guide
 - **Step-by-Step Tutorial**: Install Ollama, pull a model, verify it, and wire it into Claude Code, per OS
 - **Interactive Hardware Analyzer**: Enter your GPU/RAM/use case, get personalized recommendations
@@ -118,19 +116,17 @@ Models are defined as arrays in `src/App.jsx`:
 
 ### Customize Design
 
-The site uses a dark tech aesthetic with emerald/cyan accents. Key design tokens:
-- Background: `slate-950` (#020617)
-- Cards: `slate-800/50` with `slate-700/50` borders
-- Accent: `emerald-400`/`emerald-500`
-- Secondary: `cyan-400`/`cyan-500`
-- Warning: `amber-400`/`amber-500`
+The site uses a light editorial aesthetic (think The Atlantic), defined as semantic colors in `tailwind.config.js`:
+- Background: `paper` (#fdfcf9), section bands `paper2`
+- Cards: `white` with `rule` hairline borders
+- Accent: `accent` (#c0271f, red); secondary `navy` (#2f4858)
+- Fonts: Playfair Display (headlines), Spectral (body), Inter (labels)
 
 ## Data Sources
 
 - [Epoch AI](https://epoch.ai/): Open vs closed frontier gap analysis
 - [NIST CAISI](https://nist.gov/): Independent model evaluations
 - [LM Arena](https://lmarena.ai/): Human preference rankings
-- [TrendForce](https://www.trendforce.com/): DRAM/GPU market analysis
 - Vendor benchmarks: SWE-bench, LiveCodeBench, GPQA Diamond
 
 ## License
